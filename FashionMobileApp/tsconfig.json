@@ -1,3 +1,13 @@
 {
-  "extends": "@react-native/typescript-config/tsconfig.json"
+  "extends": "@react-native/typescript-config/tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": "./", // Base directory for absolute imports
+    "paths": {
+      "@components/*": ["src/components/*"],
+      "@navigators/*": ["src/navigators/*"],
+      "@screens/*": ["src/screens/*"]
+    }
+  },
+  "include": ["src/**/*"], // Includes all source files in the `src` folder
+  "exclude": ["node_modules", "babel.config.js"] // Excludes unwanted files
 }

@@ -5,8 +5,10 @@
     "paths": {
       "@components/*": ["src/components/*"],
       "@navigators/*": ["src/navigators/*"],
+      "@services/*": ["src/services/*"],
       "@screens/*": ["src/screens/*"],
       "@routes/*": ["src/routes/*"],
+      "@assets/*": ["src/assets/*"]
     }
   },
   "include": ["src/**/*"], // Includes all source files in the `src` folder

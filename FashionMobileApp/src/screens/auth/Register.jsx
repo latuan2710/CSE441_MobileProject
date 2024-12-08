@@ -1,21 +1,22 @@
-import { GoogleSigninButton } from '@react-native-google-signin/google-signin';
-import { Link } from '@react-navigation/native';
-import { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import {
-    Button,
-    Divider,
-    Text,
-    TextInput,
-    useTheme
-} from 'react-native-paper';
+import {GoogleSigninButton} from '@react-native-google-signin/google-signin';
+import {Link} from '@react-navigation/native';
+import {register} from '@services/authService';
+import {useState} from 'react';
+import {Alert, StyleSheet, View} from 'react-native';
+import {Button, Divider, Text, TextInput, useTheme} from 'react-native-paper';
 
-export default function Register() {
+export default function Register({navigation}) {
   const theme = useTheme();
-  const [name, setName] = useState('');
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+
+  const handleRegister = () => {
+    register(username, email, password)
+      .then(() => navigation.navigate('Verify'))
+      .catch(err => Alert.alert('Error', err.response.data.message));
+  };
 
   return (
     <View
@@ -29,8 +30,8 @@ export default function Register() {
       <View style={styles.inputContainer}>
         <TextInput
           label="Enter your username"
-          value={name}
-          onChangeText={setName}
+          value={username}
+          onChangeText={setUsername}
           style={styles.input}
           mode="outlined"
           placeholder="Hehe"
@@ -63,6 +64,7 @@ export default function Register() {
 
       <Button
         mode="contained"
+        onPress={handleRegister}
         style={[styles.signUpButton, {backgroundColor: theme.colors.primary}]}>
         <Text variant="titleMedium" style={{color: '#fff'}}>
           Sign Up

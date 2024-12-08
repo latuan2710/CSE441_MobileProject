@@ -7,8 +7,12 @@ export default function ProductCard({title, price, rating, imageUrl}) {
   const theme = useTheme();
 
   return (
-    <Card style={[styles.card,{backgroundColor:theme.colors.background}]}>
-      <Card.Cover source={{uri: imageUrl}} resizeMode='contain' style={styles.image} />
+    <Card style={[styles.card, {backgroundColor: theme.colors.background}]}>
+      <Card.Cover
+        source={{uri: imageUrl}}
+        resizeMode="cover"
+        style={styles.image}
+      />
       <Card.Content>
         <Text style={styles.title}>{title}</Text>
         <View style={styles.ratingContainer}>
@@ -32,7 +36,7 @@ const styles = StyleSheet.create({
     width: Dimensions.get('screen').width * 0.48,
     position: 'relative',
     margin: 10,
-    flex:1
+    flex: 1,
   },
   image: {
     height: 150,
@@ -59,5 +63,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 10,
     right: 10,
+    backgroundColor: '#d3d3d3',
   },
 });

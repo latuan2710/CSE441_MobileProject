@@ -1,3 +1,4 @@
+import {verifyAccount} from '@services/authService';
 import {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Appbar, Button, Text, TextInput, useTheme} from 'react-native-paper';
@@ -5,6 +6,12 @@ import {Appbar, Button, Text, TextInput, useTheme} from 'react-native-paper';
 export default function Verify({navigation}) {
   const theme = useTheme();
   const [code, setCode] = useState('');
+
+  const handleSubmit = () => {
+    verifyAccount(code)
+      .then(() => navigation.navigate('Login'))
+      .catch(err => Alert.alert('Error', err.response.data.message));
+  };
 
   return (
     <>
@@ -29,6 +36,7 @@ export default function Verify({navigation}) {
         />
         <Button
           mode="contained"
+          onPress={handleSubmit}
           style={[styles.button, {backgroundColor: theme.colors.primary}]}>
           <Text variant="titleMedium" style={{color: '#fff'}}>
             Confirm

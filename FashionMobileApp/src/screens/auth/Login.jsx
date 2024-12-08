@@ -1,22 +1,21 @@
-import {
-  GoogleSigninButton
-} from '@react-native-google-signin/google-signin';
-import { Link } from '@react-navigation/native';
-import { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import {
-  Button,
-  Divider,
-  Text,
-  TextInput,
-  useTheme
-} from 'react-native-paper';
+import {GoogleSigninButton} from '@react-native-google-signin/google-signin';
+import {Link} from '@react-navigation/native';
+import {login} from '@services/authService';
+import {useState} from 'react';
+import {Alert, StyleSheet, View} from 'react-native';
+import {Button, Divider, Text, TextInput, useTheme} from 'react-native-paper';
 
-export default function Login() {
+export default function Login({navigation}) {
   const theme = useTheme();
-  const [account, setAccount] = useState('');
-  const [password, setPassword] = useState('');
+  const [account, setAccount] = useState('latuan5');
+  const [password, setPassword] = useState('tuan1234');
   const [showPassword, setShowPassword] = useState(false);
+
+  const handleLogin = () => {
+    login(account, password)
+      .then(() => navigation.navigate('Tab'))
+      .catch(err => Alert.alert('Error', err.response.data.message));
+  };
 
   return (
     <View
@@ -51,11 +50,14 @@ export default function Login() {
           }
         />
       </View>
-      <Link screen={"ForgotPassword"} style={[styles.forgotPassword, {color: theme.colors.linkText}]}>
+      <Link
+        screen={'ForgotPassword'}
+        style={[styles.forgotPassword, {color: theme.colors.linkText}]}>
         Forgot Password?
       </Link>
       <Button
         mode="contained"
+        onPress={handleLogin}
         style={[styles.signInButton, {backgroundColor: theme.colors.primary}]}>
         <Text variant="titleMedium" style={{color: '#fff'}}>
           Sign In
@@ -74,7 +76,9 @@ export default function Login() {
       <View style={styles.signUpContainer}>
         <Text style={styles.signUpText}>
           Don't have an account?{' '}
-          <Link screen={"Register"} style={[styles.signUpLink, {color: theme.colors.linkText}]}>
+          <Link
+            screen={'Register'}
+            style={[styles.signUpLink, {color: theme.colors.linkText}]}>
             Sign Up
           </Link>
         </Text>
@@ -87,7 +91,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    justifyContent:'center'
+    justifyContent: 'center',
   },
   title: {
     fontSize: 28,

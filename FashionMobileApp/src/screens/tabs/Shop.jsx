@@ -1,86 +1,30 @@
+import MyScrollView from '@components/MyScrollView';
 import ProductCard from '@components/ProductCard';
-import {FlatList, ScrollView, StyleSheet, View} from 'react-native';
-import {useTheme} from 'react-native-paper';
+import Waiting from '@components/Waiting';
+import { getAllProducts } from '@services/productService';
+import { useEffect, useState } from 'react';
+import { Alert, FlatList, View } from 'react-native';
 
-const products = [
-  {
-    title: 'Brown Jacket',
-    price: '83.97',
-    rating: '4.9',
-    imageUrl:
-      'https://media3.coolmate.me/cdn-cgi/image/quality=80,format=auto/uploads/July2024/Quan_ECC_Tapped_Fit.10.jpg',
-  },
-  {
-    title: 'Brown Jacket',
-    price: '83.97',
-    rating: '4.9',
-    imageUrl:
-      'https://media3.coolmate.me/cdn-cgi/image/quality=80,format=auto/uploads/July2024/Quan_ECC_Tapped_Fit.10.jpg',
-  },
-  {
-    title: 'Brown Jacket',
-    price: '83.97',
-    rating: '4.9',
-    imageUrl:
-      'https://media3.coolmate.me/cdn-cgi/image/quality=80,format=auto/uploads/July2024/Quan_ECC_Tapped_Fit.10.jpg',
-  },
-  {
-    title: 'Brown Jacket',
-    price: '83.97',
-    rating: '4.9',
-    imageUrl:
-      'https://media3.coolmate.me/cdn-cgi/image/quality=80,format=auto/uploads/July2024/Quan_ECC_Tapped_Fit.10.jpg',
-  },
-  {
-    title: 'Brown Jacket',
-    price: '83.97',
-    rating: '4.9',
-    imageUrl:
-      'https://media3.coolmate.me/cdn-cgi/image/quality=80,format=auto/uploads/July2024/Quan_ECC_Tapped_Fit.10.jpg',
-  },
-  {
-    title: 'Brown Jacket',
-    price: '83.97',
-    rating: '4.9',
-    imageUrl:
-      'https://media3.coolmate.me/cdn-cgi/image/quality=80,format=auto/uploads/July2024/Quan_ECC_Tapped_Fit.10.jpg',
-  },
-  {
-    title: 'Brown Jacket',
-    price: '83.97',
-    rating: '4.9',
-    imageUrl:
-      'https://media3.coolmate.me/cdn-cgi/image/quality=80,format=auto/uploads/July2024/Quan_ECC_Tapped_Fit.10.jpg',
-  },
-  {
-    title: 'Brown Jacket',
-    price: '83.97',
-    rating: '4.9',
-    imageUrl:
-      'https://media3.coolmate.me/cdn-cgi/image/quality=80,format=auto/uploads/July2024/Quan_ECC_Tapped_Fit.10.jpg',
-  },
-  {
-    title: 'Brown Jacket',
-    price: '83.97',
-    rating: '4.9',
-    imageUrl:
-      'https://media3.coolmate.me/cdn-cgi/image/quality=80,format=auto/uploads/July2024/Quan_ECC_Tapped_Fit.10.jpg',
-  },
-  {
-    title: 'Brown Jacket',
-    price: '83.97',
-    rating: '4.9',
-    imageUrl:
-      'https://media3.coolmate.me/cdn-cgi/image/quality=80,format=auto/uploads/July2024/Quan_ECC_Tapped_Fit.10.jpg',
-  },
-];
 export default function Shop() {
-  const theme = useTheme();
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+
+  useEffect(() => {
+    getAllProducts()
+      .then(d => {
+        setProducts(d);
+        setLoading(false);
+      })
+      .catch(err =>
+        Alert.alert("Error",err.message)
+      );
+  }, [refreshing]);
+
+  if (loading) return <Waiting />;
 
   return (
-    <ScrollView
-      showsVerticalScrollIndicator={false}
-      style={[styles.container, {backgroundColor: theme.colors.background}]}>
+    <MyScrollView refreshing={refreshing} setRefreshing={setRefreshing}>
       <View style={{marginVertical: 50}}>
         <FlatList
           scrollEnabled={false}
@@ -89,20 +33,14 @@ export default function Shop() {
           data={products}
           renderItem={({item}) => (
             <ProductCard
-              title={item.title}
+              title={item.name}
               price={item.price}
               rating={item.rating}
-              imageUrl={item.imageUrl}
+              imageUrl={item.image}
             />
           )}
         />
       </View>
-    </ScrollView>
+    </MyScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});

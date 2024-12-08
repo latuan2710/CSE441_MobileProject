@@ -1,43 +1,11 @@
-import {createStackNavigator} from '@react-navigation/stack';
-import ForgotPassword from '@screens/auth/ForgotPassword';
-import Login from '@screens/auth/Login';
-import Register from '@screens/auth/Register';
-import ResetPassword from '@screens/auth/ResetPassword';
-import Verify from '@screens/auth/Verify';
+import { createStackNavigator } from '@react-navigation/stack';
+import { screens } from '@routes/index';
 
 const Stack = createStackNavigator();
 
-const screens = [
-  {
-    name: 'Login',
-    component: Login,
-    options: {headerShown: false},
-  },
-  {
-    name: 'Register',
-    component: Register,
-    options: {headerShown: false},
-  },
-  {
-    name: 'ForgotPassword',
-    component: ForgotPassword,
-    options: {headerShown: false},
-  },
-  {
-    name: 'Verify',
-    component: Verify,
-    options: {headerShown: false},
-  },
-  {
-    name: 'ResetPassword',
-    component: ResetPassword,
-    options: {headerShown: false},
-  },
-];
-
 export default function StackNavigator() {
   return (
-    <Stack.Navigator initialRouteName='ResetPassword'>
+    <Stack.Navigator initialRouteName='Tab'>
       {screens.map((screen, index) => (
         <Stack.Screen
           key={index}

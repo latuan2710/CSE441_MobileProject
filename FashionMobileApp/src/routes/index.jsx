@@ -1,6 +1,7 @@
 import TabNavigator from '@navigators/TabNavigator';
 import Help from '@screens/Help';
 import Privacy from '@screens/Privacy';
+import ProductDetail from '@screens/ProductDetail';
 import ForgotPassword from '@screens/auth/ForgotPassword';
 import Login from '@screens/auth/Login';
 import Register from '@screens/auth/Register';
@@ -51,6 +52,11 @@ export const screens = [
   {
     name: 'Help',
     component: Help,
+    options: {headerShown: false},
+  },
+  {
+    name: 'ProductDetail',
+    component: ProductDetail,
     options: {headerShown: false},
   },
 ];

@@ -1,0 +1,120 @@
+/* Global Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f7f7fc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Centering the login container */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* background: linear-gradient(135deg, #6c63ff, #7a66ff); */
+    padding: 20px;
+}
+
+/* Login form box */
+.login-form {
+    background-color: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.login-form:hover {
+    transform: scale(1.05);
+}
+
+/* Form heading */
+.login-form h2 {
+    font-size: 28px;
+    color: #333;
+    font-weight: 500;
+    margin-bottom: 15px;
+}
+
+/* Input fields style */
+.input-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.input-group label {
+    font-size: 14px;
+    color: #555;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px 15px;
+    font-size: 16px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    transition: border 0.3s ease, box-shadow 0.3s ease;
+    background-color: #f9f9f9;
+}
+
+.input-group input:focus {
+    border: 1px solid #6c63ff;
+    box-shadow: 0 0 5px rgba(108, 99, 255, 0.5);
+    outline: none;
+}
+
+/* Login button style */
+.login-btn {
+    width: 100%;
+    padding: 12px 0;
+    background-color: #6c63ff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.login-btn:hover {
+    background-color: #5a53d6;
+}
+
+/* Forgot password and sign-up links */
+.forgot-password {
+    margin-top: 15px;
+}
+
+.forgot-password p {
+    font-size: 14px;
+    color: #555;
+}
+
+.forgot-password a {
+    color: #6c63ff;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.forgot-password a:hover {
+    text-decoration: underline;
+}
+
+/* Styling for the sign-up prompt */
+.forgot-password p a {
+    font-weight: bold;
+}

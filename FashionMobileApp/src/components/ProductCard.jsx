@@ -1,13 +1,17 @@
+import {useNavigation} from '@react-navigation/native';
 import React from 'react';
 import {Dimensions, StyleSheet, Text, View} from 'react-native';
 import {Card, IconButton, useTheme} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-export default function ProductCard({title, price, rating, imageUrl}) {
+export default function ProductCard({id, title, price, rating, imageUrl}) {
   const theme = useTheme();
+  const navigation = useNavigation();
 
   return (
-    <Card style={[styles.card, {backgroundColor: theme.colors.background}]}>
+    <Card
+      style={[styles.card, {backgroundColor: theme.colors.background}]}
+      onPress={() => navigation.navigate('ProductDetail', {id})}>
       <Card.Cover
         source={{uri: imageUrl}}
         resizeMode="cover"

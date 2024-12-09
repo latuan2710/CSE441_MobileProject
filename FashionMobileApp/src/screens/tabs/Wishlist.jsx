@@ -1,7 +1,7 @@
 import MyView from '@components/MyView';
 import ProductCard from '@components/ProductCard';
-import { FlatList, StyleSheet } from 'react-native';
-import { Appbar } from 'react-native-paper';
+import {FlatList, StyleSheet} from 'react-native';
+import {Appbar} from 'react-native-paper';
 
 const products = [
   {
@@ -81,6 +81,7 @@ export default function Wishlist() {
         data={products}
         renderItem={({item}) => (
           <ProductCard
+            id={item.id}
             title={item.title}
             price={item.price}
             rating={item.rating}

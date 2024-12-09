@@ -81,13 +81,14 @@ export default function Home() {
   return (
     <ScrollView
       style={[styles.container, {backgroundColor: theme.colors.background}]}>
-      <View style={{marginVertical:50}}>
+      <View style={{marginVertical: 50}}>
         <FlatList
           horizontal={true}
           showsHorizontalScrollIndicator={false}
           data={products}
           renderItem={({item}) => (
             <ProductCard
+              id={item.id}
               title={item.title}
               price={item.price}
               rating={item.rating}

@@ -7,8 +7,9 @@
       "@navigators/*": ["src/navigators/*"],
       "@services/*": ["src/services/*"],
       "@screens/*": ["src/screens/*"],
+      "@context/*": ["src/context/*"],
       "@routes/*": ["src/routes/*"],
-      "@assets/*": ["src/assets/*"]
+      "@assets/*": ["src/assets/*"],
     }
   },
   "include": ["src/**/*"], // Includes all source files in the `src` folder

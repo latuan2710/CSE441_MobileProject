@@ -5,9 +5,11 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {MD3LightTheme, PaperProvider} from 'react-native-paper';
 import {NavigationContainer} from '@react-navigation/native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import StackNavigator from '@navigators/StackNavigator';
 import {StatusBar} from 'react-native';
 import React from 'react';
+
+import StackNavigator from './src/navigators/StackNavigator';
+import WishlistContextProvider from './src/context/WishlistContext';
 
 export default function App() {
   const theme = {
@@ -26,15 +28,17 @@ export default function App() {
   return (
     <PaperProvider theme={theme}>
       <GestureHandlerRootView>
-        <SafeAreaView style={{flex: 1}}>
-          <StatusBar
-            backgroundColor={theme.colors.primary}
-            barStyle={'light-content'}
-          />
-          <NavigationContainer>
-            <StackNavigator />
-          </NavigationContainer>
-        </SafeAreaView>
+        <WishlistContextProvider>
+          <SafeAreaView style={{flex: 1}}>
+            <StatusBar
+              backgroundColor={theme.colors.primary}
+              barStyle={'light-content'}
+            />
+            <NavigationContainer>
+              <StackNavigator />
+            </NavigationContainer>
+          </SafeAreaView>
+        </WishlistContextProvider>
       </GestureHandlerRootView>
     </PaperProvider>
   );

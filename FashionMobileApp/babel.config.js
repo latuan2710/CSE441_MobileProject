@@ -12,6 +12,7 @@ module.exports = {
           '@navigators': './src/navigators',
           '@services': './src/services',
           '@screens': './src/screens',
+          '@context': './src/context',
           '@routes': './src/routes',
           '@assets': './src/assets',
         },

@@ -1,0 +1,17 @@
+/* Add this CSS to style.css in the Style folder */
+
+.clickable-row {
+    cursor: pointer;
+    /* Change cursor to pointer to indicate it's clickable */
+    transition: background-color 0.3s ease;
+    /* Smooth background change */
+}
+
+.clickable-row:hover td {
+    background-color: #656567;
+}
+
+
+.clickable-row:active {
+    background-color: #e2e6ea;
+}

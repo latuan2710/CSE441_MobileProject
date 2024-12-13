@@ -1,7 +1,10 @@
 import TabNavigator from '@navigators/TabNavigator';
 import Help from '@screens/Help';
+import Order from '@screens/Order';
 import Privacy from '@screens/Privacy';
 import ProductDetail from '@screens/ProductDetail';
+import ProfileEdit from '@screens/ProfileEdit';
+import Review from '@screens/Review';
 import ForgotPassword from '@screens/auth/ForgotPassword';
 import Login from '@screens/auth/Login';
 import Register from '@screens/auth/Register';
@@ -57,6 +60,21 @@ export const screens = [
   {
     name: 'ProductDetail',
     component: ProductDetail,
+    options: {headerShown: false},
+  },
+  {
+    name: 'ProfileEdit',
+    component: ProfileEdit,
+    options: {headerShown: false},
+  },
+  {
+    name: 'Order',
+    component: Order,
+    options: {headerShown: false},
+  },
+  {
+    name: 'Review',
+    component: Review,
     options: {headerShown: false},
   },
 ];

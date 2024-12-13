@@ -8,10 +8,6 @@ export const login = async (account, password) => {
     password,
   });
 
-  if (res.status === 200) {
-    console.log('login ok: ', res.data);
-  }
-
   return res.data;
 };
 
@@ -22,21 +18,21 @@ export const register = async (username, email, password) => {
     email,
   });
 
-  if (res.status === 200) {
-    console.log('register ok: ', res.data);
-  }
-
   return res.data;
 };
 
 export const verifyAccount = async token => {
   try {
     const res = await axios.get(`${host}/verify?token=${token}`);
+    return res.status;
+  } catch (error) {
+    return 403;
+  }
+};
 
-    if (res.status === 200) {
-      console.log('verifyAccount ok: ', res.data);
-    }
-
+export const logout = async () => {
+  try {
+    const res = await axios.post(`${host}/logout`);
     return res.status;
   } catch (error) {
     return 403;

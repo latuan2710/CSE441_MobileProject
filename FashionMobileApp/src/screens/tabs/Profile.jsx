@@ -1,20 +1,20 @@
 import MyScrollView from '@components/MyScrollView';
-import { getProfile } from '@services/userService';
-import { useEffect, useState } from 'react';
-import { Button, FlatList, StyleSheet, Text, View } from 'react-native';
-import { Appbar, Avatar, IconButton, List, useTheme } from 'react-native-paper';
+import MyView from '@components/MyView';
+import {logout} from '@services/authService';
+import {getProfile} from '@services/userService';
+import {useEffect, useState} from 'react';
+import {Button, FlatList, StyleSheet, Text, View} from 'react-native';
+import {Appbar, Avatar, IconButton, List, useTheme} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const options = [
-  {title: 'Your profile', icon: 'account', link: ''},
-  {title: 'My Orders', icon: 'shopping-outline', link: ''},
-  {title: 'Settings', icon: 'cog-outline', link: ''},
+  {title: 'Your profile', icon: 'account', link: 'ProfileEdit'},
+  {title: 'My Orders', icon: 'shopping-outline', link: 'Order'},
   {title: 'Help Center', icon: 'help-circle-outline', link: 'Help'},
   {title: 'Privacy Policy', icon: 'lock-outline', link: 'Privacy'},
-  {title: 'Log out', icon: 'logout', link: 'Login'},
 ];
 
-const needLogin = ['Your profile', 'My Orders', 'Log out'];
+const needLogin = ['Your profile', 'My Orders'];
 
 export default function Profile({navigation}) {
   const theme = useTheme();
@@ -22,12 +22,18 @@ export default function Profile({navigation}) {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    getProfile()
-      .then(d => {
-        setUser(d);
-      })
-      .catch(() => navigation.navigate('Login'));
+    getProfile().then(d => {
+      console.log(d);
+      setUser(d);
+    });
   }, [refreshing]);
+
+  const handleLogout = async () => {
+    const status = await logout();
+    if (status === 200) {
+      setUser(null);
+    }
+  };
 
   return (
     <MyScrollView refreshing={refreshing} setRefreshing={setRefreshing}>
@@ -80,31 +86,48 @@ export default function Profile({navigation}) {
           </View>
         </View>
       )}
-
-      <FlatList
-        scrollEnabled={false}
-        data={options}
-        keyExtractor={item => item.title}
-        renderItem={({item}) => {
-          if (!user && needLogin.includes(item.title)) return null;
-          return (
-            <List.Item
-              title={item.title}
-              left={props => (
-                <Icon
-                  {...props}
-                  name={item.icon}
-                  size={24}
-                  color={theme.colors.primary}
-                />
-              )}
-              right={props => <List.Icon {...props} icon="chevron-right" />}
-              onPress={() => navigation.navigate(item.link)}
-              style={styles.listItem}
+      <MyView>
+        <FlatList
+          scrollEnabled={false}
+          data={options}
+          keyExtractor={item => item.title}
+          renderItem={({item}) => {
+            if (!user && needLogin.includes(item.title)) return null;
+            return (
+              <List.Item
+                title={item.title}
+                left={props => (
+                  <Icon
+                    {...props}
+                    name={item.icon}
+                    size={24}
+                    color={theme.colors.primary}
+                  />
+                )}
+                right={props => <List.Icon {...props} icon="chevron-right" />}
+                onPress={() => navigation.navigate(item.link)}
+                style={styles.listItem}
+              />
+            );
+          }}
+        />
+      </MyView>
+      {user && (
+        <List.Item
+          title={'Logout'}
+          left={props => (
+            <Icon
+              {...props}
+              name={'logout'}
+              size={24}
+              color={theme.colors.primary}
             />
-          );
-        }}
-      />
+          )}
+          right={props => <List.Icon {...props} icon="chevron-right" />}
+          onPress={handleLogout}
+          style={styles.listItem}
+        />
+      )}
     </MyScrollView>
   );
 }

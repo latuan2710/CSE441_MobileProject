@@ -52,7 +52,6 @@ export default function EmailSignIn() {
       await user.reload();
       if (user.emailVerified) {
         Alert.alert('Success', 'Logged in successfully!');
-        console.log('user: ', user);
       } else {
         await sendVerificationEmail(user);
       }

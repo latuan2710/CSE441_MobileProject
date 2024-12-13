@@ -12,7 +12,7 @@ export default function Help({navigation}) {
     <>
       <Appbar.Header style={styles.header}>
         <Appbar.BackAction onPress={() => navigation.goBack()} />
-        <Appbar.Content title="Privacy Policy" titleStyle={styles.title} />
+        <Appbar.Content title="Help Center" titleStyle={styles.title} />
       </Appbar.Header>
       <ScrollView
         style={[styles.container, {backgroundColor: theme.colors.background}]}>

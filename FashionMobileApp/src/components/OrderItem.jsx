@@ -1,8 +1,12 @@
 import React from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
-import { Button } from 'react-native-paper';
+import {Image, StyleSheet, Text, View} from 'react-native';
+import {Button} from 'react-native-paper';
 
-export default function OrderItem({orderDetail, onPress, buttonTitle}) {
+export default function OrderItem({
+  orderDetail,
+  onPress = null,
+  buttonTitle = null,
+}) {
   return (
     <View style={styles.itemContainer}>
       <Image source={{uri: orderDetail.imageUrl}} style={styles.itemImage} />
@@ -11,9 +15,14 @@ export default function OrderItem({orderDetail, onPress, buttonTitle}) {
         <Text style={styles.itemSize}>Quantity: {orderDetail.quantity}</Text>
         <Text style={styles.itemPrice}>${orderDetail.price.toFixed(2)}</Text>
       </View>
-      <Button mode='contained' onPress={onPress} style={styles.buttonContainer}>
-        {buttonTitle}
-      </Button>
+      {onPress && (
+        <Button
+          mode="contained"
+          onPress={onPress}
+          style={styles.buttonContainer}>
+          {buttonTitle}
+        </Button>
+      )}
     </View>
   );
 }

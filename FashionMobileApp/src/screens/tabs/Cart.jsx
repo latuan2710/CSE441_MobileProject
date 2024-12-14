@@ -5,7 +5,7 @@ import {Appbar, Button} from 'react-native-paper';
 import {SwipeListView} from 'react-native-swipe-list-view';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-export default function Cart() {
+export default function Cart({navigation}) {
   const [cartItems, setCartItems] = useState([
     {
       id: '1',
@@ -86,7 +86,10 @@ export default function Cart() {
             <Text style={styles.totalText}>Total Cost</Text>
             <Text style={styles.totalPrice}>${total.toFixed(2)}</Text>
           </View>
-          <Button mode="contained" style={styles.checkoutButton}>
+          <Button
+            mode="contained"
+            style={styles.checkoutButton}
+            onPress={() => navigation.navigate('Checkout')}>
             Proceed to Checkout
           </Button>
         </View>
@@ -150,6 +153,5 @@ const styles = StyleSheet.create({
   },
   checkoutButton: {
     marginTop: 16,
-    backgroundColor: '#5a3815',
   },
 });

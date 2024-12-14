@@ -1,4 +1,5 @@
 import TabNavigator from '@navigators/TabNavigator';
+import Checkout from '@screens/Checkout';
 import Help from '@screens/Help';
 import Order from '@screens/Order';
 import Privacy from '@screens/Privacy';
@@ -75,6 +76,11 @@ export const screens = [
   {
     name: 'Review',
     component: Review,
+    options: {headerShown: false},
+  },
+  {
+    name: 'Checkout',
+    component: Checkout,
     options: {headerShown: false},
   },
 ];

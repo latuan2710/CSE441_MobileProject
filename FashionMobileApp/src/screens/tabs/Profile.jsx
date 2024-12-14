@@ -23,7 +23,6 @@ export default function Profile({navigation}) {
 
   useEffect(() => {
     getProfile().then(d => {
-      console.log(d);
       setUser(d);
     });
   }, [refreshing]);

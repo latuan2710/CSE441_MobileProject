@@ -1,7 +1,8 @@
 import MyScrollView from '@components/MyScrollView';
 import Waiting from '@components/Waiting';
+import { WishlistContext } from '@context/WishlistContext';
 import {getProductById} from '@services/productService';
-import {useEffect, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {
   Appbar,
@@ -21,6 +22,7 @@ export default function ProductDetail({route, navigation}) {
   const [loading, setLoading] = useState(true);
   const [isFavor, setIsFavor] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  const {isContain, addWishlist, wishlist} = useContext(WishlistContext);
 
   const sizes = ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
   const colors = [
@@ -32,9 +34,9 @@ export default function ProductDetail({route, navigation}) {
     '#000000',
   ];
 
-  // useEffect(() => {
-  //   setIsFavor(isContain(id));
-  // }, [wishlist]);
+  useEffect(() => {
+    setIsFavor(isContain(id));
+  }, [wishlist,id]);
 
   useEffect(() => {
     getProductById(id).then(d => {

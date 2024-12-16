@@ -1,5 +1,6 @@
+import {WishlistContext} from '@context/WishlistContext';
 import {useNavigation} from '@react-navigation/native';
-import React from 'react';
+import {useContext, useEffect, useState} from 'react';
 import {Dimensions, StyleSheet, Text, View} from 'react-native';
 import {Card, IconButton, useTheme} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -7,7 +8,13 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 export default function ProductCard({id, title, price, rating, imageUrl}) {
   const theme = useTheme();
   const navigation = useNavigation();
+  const [isFavor, setIsFavor] = useState(false);
+  const {isContain, addWishlist, wishlist} = useContext(WishlistContext);
 
+  useEffect(() => {
+    setIsFavor(isContain(id));
+  }, [wishlist, id]);
+  
   return (
     <Card
       style={[styles.card, {backgroundColor: theme.colors.background}]}
@@ -26,9 +33,9 @@ export default function ProductCard({id, title, price, rating, imageUrl}) {
         <Text style={styles.price}>${price}</Text>
       </Card.Content>
       <IconButton
-        icon="heart-outline"
+        icon={isFavor ? 'heart' : 'heart-outline'}
         size={20}
-        onPress={() => console.log('Favorite')}
+        onPress={() => addWishlist(id)}
         style={styles.favoriteIcon}
       />
     </Card>

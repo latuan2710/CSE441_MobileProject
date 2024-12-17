@@ -6,7 +6,6 @@ import com.baki.backend.model.Staff;
 import com.baki.backend.model.User;
 import com.baki.backend.service.StaffService;
 import com.baki.backend.service.UserService;
-import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,23 +51,12 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterRequest request) throws MessagingException {
+    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
 
         User user = userService.register(request);
 
         return ResponseEntity.ok(user);
 
-    }
-
-    @GetMapping("/verify")
-    public ResponseEntity<?> verifyUser(@RequestParam("token") String token) {
-        boolean verified = userService.verifyUser(token);
-
-        if (verified) {
-            return ResponseEntity.ok("Account verified successfully!");
-        } else {
-            return ResponseEntity.badRequest().body("Verification failed. Token may be invalid or expired.");
-        }
     }
 
     @PostMapping("/login")

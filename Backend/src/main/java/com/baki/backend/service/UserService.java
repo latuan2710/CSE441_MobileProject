@@ -2,10 +2,7 @@ package com.baki.backend.service;
 
 import com.baki.backend.dto.*;
 import com.baki.backend.model.User;
-import com.baki.backend.model.VerificationToken;
 import com.baki.backend.repository.UserRepository;
-import com.baki.backend.repository.VerificationTokenRepository;
-import jakarta.mail.MessagingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +11,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -27,21 +23,15 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
-    private VerificationTokenRepository tokenRepository;
-    @Autowired
-    private EmailService emailService;
-    @Autowired
     private CloudinaryService cloudinaryService;
     private static final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" +
             "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 
-    public User register(RegisterRequest request) throws MessagingException {
+    public User register(RegisterRequest request) {
         // Validate email format
-
         if (!Pattern.compile(EMAIL_PATTERN).matcher(request.getEmail()).matches()) {
             throw new RuntimeException("Invalid email format");
         }
-
         // Check if username or email already exists
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new RuntimeException("Username is already taken!");
@@ -57,48 +47,11 @@ public class UserService {
         user.setEmail(request.getEmail());
         user.setPhone(request.getPhone());
         user.setAddress(request.getAddress());
-        user.setStatus(false);
+        user.setStatus(true);
 
         User savedUser = userRepository.save(user);
-        String token = generateVerificationToken();
-        VerificationToken verificationToken = new VerificationToken(savedUser, token);
-        tokenRepository.save(verificationToken);
-
-        // Send verification email
-        emailService.sendVerificationEmail(savedUser, token);
-
 
         return userRepository.save(user);
-    }
-
-    private String generateVerificationToken() {
-        Random random = new Random();
-        return String.format("%06d", random.nextInt(1000000));
-    }
-
-    public boolean verifyUser(String token) {
-        Optional<VerificationToken> verificationTokenOptional = tokenRepository.findByToken(token);
-
-        if (verificationTokenOptional.isEmpty()) {
-            return false;
-        }
-
-        VerificationToken verificationToken = verificationTokenOptional.get();
-
-        // Check if token is expired
-        if (verificationToken.getExpiryDate().isBefore(LocalDateTime.now())) {
-            tokenRepository.delete(verificationToken);
-            return false;
-        }
-
-        User user = verificationToken.getUser();
-        user.setStatus(true);
-        userRepository.save(user);
-
-        // Delete used token
-        tokenRepository.delete(verificationToken);
-
-        return true;
     }
 
     public User login(LoginRequest request) {

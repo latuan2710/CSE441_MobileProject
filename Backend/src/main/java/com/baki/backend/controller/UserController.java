@@ -6,7 +6,6 @@ import com.baki.backend.dto.RegisterRequest;
 import com.baki.backend.dto.UserDTO;
 import com.baki.backend.model.User;
 import com.baki.backend.service.UserService;
-import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +24,7 @@ public class UserController {
 
     // User Registration
     @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody RegisterRequest request) throws MessagingException {
+    public ResponseEntity<User> register(@RequestBody RegisterRequest request) {
         User newUser = userService.register(request);
         return ResponseEntity.ok(newUser);
     }

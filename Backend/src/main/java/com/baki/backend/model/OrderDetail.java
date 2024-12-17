@@ -1,5 +1,6 @@
 package com.baki.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -12,6 +13,7 @@ public class OrderDetail {
     private int id;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(nullable = false, name = "order_id")
     private Order order;
 

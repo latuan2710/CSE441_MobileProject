@@ -28,5 +28,6 @@ public class Order {
     private String receiverPhone;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private EOrderStatus status = EOrderStatus.PENDING;
 }

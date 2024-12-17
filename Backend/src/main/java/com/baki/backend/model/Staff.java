@@ -31,7 +31,8 @@ public class Staff {
     @Column(length = 500)
     private String avatar;
 
-    @Column(nullable = true, length = 10)
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private ERole role;
 
     @Column(nullable = false)

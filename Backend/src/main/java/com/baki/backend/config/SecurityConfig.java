@@ -3,6 +3,7 @@ package com.baki.backend.config;
 import com.baki.backend.security.CustomAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -25,19 +26,18 @@ public class SecurityConfig {
                 .addFilterBefore(customAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/api/auth/logout",
                                 "/api/users/profile",
-                                "/api/users/upload").authenticated()
+                                "/api/users/upload",
+                                "/api/service/carts/**").authenticated()
 
-                        .requestMatchers(
-                                "/api/auth/**",
+                        .requestMatchers(HttpMethod.GET,
                                 "/api/service/products",
                                 "/api/service/products/{id}",
                                 "/api/service/brands",
                                 "/api/service/categories",
                                 "api/service/subcategories").permitAll()
+                        .requestMatchers("/api/auth/**").permitAll()
 
-                        .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
                         .requestMatchers(
                                 "/api/admin/profile",
                                 "/api/admin/upload",
@@ -46,7 +46,7 @@ public class SecurityConfig {
                                 "/api/service/brands/**",
                                 "/api/service/categories/**",
                                 "/api/service/subcategories/**").hasAnyAuthority("ADMIN", "STAFF")
-
+                        .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
                         .anyRequest().authenticated()
                 );
 

@@ -21,7 +21,7 @@ public class AdminController {
     @Autowired
     private StaffService staffService;
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<List<Staff>> getAllStaffs() {
         return ResponseEntity.ok(staffService.getAllUsers());
     }

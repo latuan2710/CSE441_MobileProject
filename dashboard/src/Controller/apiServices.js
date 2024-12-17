@@ -239,8 +239,8 @@ const getAllStaffs = async () =>
 {
   try
   {
-    const response = await axios.get( `/api/admin` );
-    console.log( response );
+    const response = await axios.get( `/api/admin/` );
+    return response.data;
   } catch ( error )
   {
     console.error( "Error fetching staffs:", error.message );

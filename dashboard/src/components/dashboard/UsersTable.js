@@ -12,25 +12,31 @@ const UsersTable = () =>
   const [ modal, setModal ] = useState( false );
   const [ modalId, setModalId ] = useState( null );
   const [ refresh, setRefresh ] = useState( 0 );
-
+  const account = JSON.parse( sessionStorage.getItem( "account" ) );
   // Paging States
   const [ currentPage, setCurrentPage ] = useState( 1 );
   const itemsPerPage = 6; // Number of items per page
 
   useEffect( () =>
   {
-    const fetchData = async () =>
+    if ( account === null )
     {
-      try
+      navigator( "/login" );
+    } else
+    {
+      const fetchData = async () =>
       {
-        const usersResponse = await apiServices.getAllUsers();
-        setUsers( usersResponse );
-      } catch ( error )
-      {
-        console.error( "Error fetching data:", error );
-      }
-    };
-    fetchData();
+        try
+        {
+          const usersResponse = await apiServices.getAllUsers();
+          setUsers( usersResponse );
+        } catch ( error )
+        {
+          console.error( "Error fetching data:", error );
+        }
+      };
+      fetchData();
+    }
   }, [ refresh ] );
 
   const totalPages = Math.ceil( users.length / itemsPerPage );
@@ -139,7 +145,7 @@ const UsersTable = () =>
       </Card>
 
       {/* Add/Edit Users Modal */ }
-      { modal && (
+      { account.role === "ADMIN" && modal && (
         <UserModal
           id={ modalId }
           modal={ modal }
@@ -148,6 +154,7 @@ const UsersTable = () =>
           setRefresh={ setRefresh }
         />
       ) }
+
     </div>
   );
 };

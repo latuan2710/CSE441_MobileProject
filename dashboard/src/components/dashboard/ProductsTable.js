@@ -14,6 +14,7 @@ const ProductsTable = () =>
   const [ modal, setModal ] = useState( false );
   const [ modalId, setModalId ] = useState( null );
   const [ refresh, setRefresh ] = useState( 0 );
+  const account = JSON.parse( sessionStorage.getItem( "account" ) );
 
   // Paging States
   const [ currentPage, setCurrentPage ] = useState( 1 );
@@ -21,37 +22,43 @@ const ProductsTable = () =>
 
   useEffect( () =>
   {
-    const fetchData = async () =>
+    if ( account === null )
     {
-      try
+      navigator( "/login" );
+    } else
+    {
+      const fetchData = async () =>
       {
-        // Fetch all required data
-        const productsResponse = await apiServices.getAllProducts();
-        const brandsResponse = await apiServices.getAllBrands();
-        const categoriesResponse = await apiServices.getAllCategories();
-
-        // Convert brands and categories to lookup objects
-        const brandsMap = {};
-        brandsResponse.forEach( ( brand ) =>
+        try
         {
-          brandsMap[ brand.id ] = brand.name;
-        } );
+          // Fetch all required data
+          const productsResponse = await apiServices.getAllProducts();
+          const brandsResponse = await apiServices.getAllBrands();
+          const categoriesResponse = await apiServices.getAllCategories();
 
-        const categoriesMap = {};
-        categoriesResponse.forEach( ( category ) =>
+          // Convert brands and categories to lookup objects
+          const brandsMap = {};
+          brandsResponse.forEach( ( brand ) =>
+          {
+            brandsMap[ brand.id ] = brand.name;
+          } );
+
+          const categoriesMap = {};
+          categoriesResponse.forEach( ( category ) =>
+          {
+            categoriesMap[ category.id ] = category.name;
+          } );
+
+          setProducts( productsResponse );
+          setBrands( brandsMap );
+          setCategories( categoriesMap );
+        } catch ( error )
         {
-          categoriesMap[ category.id ] = category.name;
-        } );
-
-        setProducts( productsResponse );
-        setBrands( brandsMap );
-        setCategories( categoriesMap );
-      } catch ( error )
-      {
-        console.error( "Error fetching data:", error );
-      }
-    };
-    fetchData();
+          console.error( "Error fetching data:", error );
+        }
+      };
+      fetchData();
+    }
   }, [ refresh ] );
 
   const totalPages = Math.ceil( products.length / itemsPerPage );
@@ -149,7 +156,7 @@ const ProductsTable = () =>
       </Card>
 
       {/* Add/Edit Products Modal */ }
-      { modal && (
+      { account.role === "ADMIN" && modal && (
         <ProductModal
           id={ modalId }
           modal={ modal }

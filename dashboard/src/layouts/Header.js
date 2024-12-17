@@ -1,5 +1,6 @@
 import React from "react";
-import {
+import
+{
   Button,
   Collapse,
   Dropdown,
@@ -12,14 +13,17 @@ import {
   NavbarBrand
 } from "reactstrap";
 import { ReactComponent as LogoWhite } from "../assets/images/logos/materialprowhite.svg";
-import user1 from "../assets/images/users/user4.jpg";
 import Logo from "./Logo";
+import { useNavigate } from "react-router-dom";
 
 const Header = () =>
 {
   const [ isOpen, setIsOpen ] = React.useState( false );
+  const navigate = useNavigate();
 
   const [ dropdownOpen, setDropdownOpen ] = React.useState( false );
+
+  const account = JSON.parse( sessionStorage.getItem( "account" ) );
 
   const toggle = () => setDropdownOpen( ( prevState ) => !prevState );
   const Handletoggle = () =>
@@ -30,6 +34,12 @@ const Header = () =>
   {
     document.getElementById( "sidebarArea" ).classList.toggle( "showSidebar" );
   };
+
+  const logout = () =>
+  {
+    sessionStorage.removeItem( "account" );
+    navigate( "/login" );
+  }
   return (
     <Navbar color="primary" dark expand="md" className="fix-header">
       <div className="d-flex align-items-center">
@@ -70,20 +80,16 @@ const Header = () =>
         <Dropdown isOpen={ dropdownOpen } toggle={ toggle }>
           <DropdownToggle color="transparent">
             <img
-              src={ user1 }
+              src={ account ? account.avatar : null }
               alt="profile"
               className="rounded-circle"
               width="30"
             ></img>
           </DropdownToggle>
           <DropdownMenu>
-            <DropdownItem header>Info</DropdownItem>
-            <DropdownItem>My Account</DropdownItem>
-            <DropdownItem>Edit Profile</DropdownItem>
-            <DropdownItem divider />
-            <DropdownItem>My Balance</DropdownItem>
-            <DropdownItem>Inbox</DropdownItem>
-            <DropdownItem>Logout</DropdownItem>
+            <DropdownItem header>Actions</DropdownItem>
+            {/* <DropdownItem divider /> */ }
+            <DropdownItem onClick={ () => logout() }>Logout</DropdownItem>
           </DropdownMenu>
         </Dropdown>
       </Collapse>

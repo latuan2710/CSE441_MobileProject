@@ -4,10 +4,21 @@ import Feeds from "../components/dashboard/Feeds";
 
 import ProductsTable from "../components/dashboard/ProductsTable";
 import BrandsTable from "../components/dashboard/BrandsTable";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 
 const Starter = () =>
 {
+  const navigate = useNavigate();
+  const account = JSON.parse( sessionStorage.getItem( "account" ) );
+  useEffect( () =>
+  {
+    if ( account === null )
+    {
+      navigate( "/login" );
+    }
+  } )
   return (
     <div>
       {/***Sales & Feed***/ }

@@ -27,7 +27,7 @@ const ThemeRoutes = [
     path: "/",
     element: <FullLayout />,
     children: [
-      { path: "/", element: <Navigate to="/products" /> },  // Default redirect after login
+      { path: "/", element: <Navigate to="/login" /> },  // Default redirect after login
       { path: "/starter", element: <Starter /> },
       { path: "/products", element: <Products /> },
       { path: "/brands", element: <Brands /> },

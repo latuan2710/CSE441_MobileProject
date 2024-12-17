@@ -1,48 +1,49 @@
 import { Button, Nav, NavItem } from "reactstrap";
-import { Link, useLocation } from "react-router-dom";
-import user1 from "../assets/images/users/user4.jpg";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import probg from "../assets/images/bg/download.jpg";
+import { useEffect } from "react";
 
 const navigation = [
   {
     title: "Dashboard",
     href: "/starter",
     icon: "bi bi-speedometer2",
+    roles: [ "ADMIN", "STAFF" ], // Accessible roles
+
   },
   {
     title: "Staffs",
     href: "/staffs",
     icon: "bi bi-people-fill",
+    roles: [ "ADMIN" ],
+
   },
   {
     title: "Users",
     href: "/users",
     icon: "bi bi-person-circle",
+    roles: [ "ADMIN", "STAFF" ],
+
   },
   {
     title: "Products",
     href: "/products",
     icon: "bi bi-box-seam",
+    roles: [ "ADMIN", "STAFF" ],
   },
   {
     title: "Brands",
     href: "/brands",
     icon: "bi bi-tags",
+    roles: [ "ADMIN", "STAFF" ],
+
   },
   {
     title: "Categories",
     href: "/categories",
     icon: "bi bi-list-ul",
-  },
-  {
-    title: "Cards",
-    href: "/cards",
-    icon: "bi bi-card-text",
-  },
-  {
-    title: "Grid",
-    href: "/grid",
-    icon: "bi bi-columns",
+    roles: [ "ADMIN", "STAFF" ],
+
   },
 ];
 
@@ -53,6 +54,20 @@ const Sidebar = () =>
     document.getElementById( "sidebarArea" ).classList.toggle( "showSidebar" );
   };
   let location = useLocation();
+  const navigate = useNavigate();
+  const account = JSON.parse( sessionStorage.getItem( "account" ) );
+
+  useEffect( () =>
+  {
+    if ( account === null )
+    {
+      navigate( "/login" );
+    }
+  }, [ account, navigate ] );
+
+  const filteredNavigation = navigation.filter( ( navi ) =>
+    navi.roles.includes( account?.role )
+  );
 
   return (
     <div>
@@ -62,7 +77,7 @@ const Sidebar = () =>
         style={ { background: `url(${ probg }) no-repeat` } }
       >
         <div className="p-3 d-flex">
-          <img src={ user1 } alt="user" width="50" className="rounded-circle" />
+          <img src={ account.avatar } alt="user" width="50" className="rounded-circle" />
           <Button
             color="white"
             className="ms-auto text-white d-lg-none"
@@ -71,11 +86,11 @@ const Sidebar = () =>
             <i className="bi bi-x"></i>
           </Button>
         </div>
-        <div className="bg-dark text-white p-2 opacity-75">Steave Rojer</div>
+        <div className="bg-dark text-white p-2 opacity-75">{ account.username }</div>
       </div>
       <div className="p-3 mt-2">
         <Nav vertical className="sidebarNav">
-          { navigation.map( ( navi, index ) => (
+          { filteredNavigation.map( ( navi, index ) => (
             <NavItem key={ index } className="sidenav-bg">
               <Link
                 to={ navi.href }

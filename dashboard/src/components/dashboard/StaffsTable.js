@@ -12,6 +12,7 @@ const StaffsTable = () =>
   const [ modal, setModal ] = useState( false );
   const [ modalId, setModalId ] = useState( null );
   const [ refresh, setRefresh ] = useState( 0 );
+  const account = JSON.parse( sessionStorage.getItem( "account" ) );
 
   // Paging States
   const [ currentPage, setCurrentPage ] = useState( 1 );
@@ -19,18 +20,26 @@ const StaffsTable = () =>
 
   useEffect( () =>
   {
-    const fetchData = async () =>
+    if ( account === null )
     {
-      try
+      navigator( "/login" );
+    } else
+    {
+      const fetchData = async () =>
       {
-        const staffsResponse = await apiServices.getAllStaffs();
-        setStaffs( staffsResponse );
-      } catch ( error )
-      {
-        console.error( "Error fetching data:", error );
-      }
-    };
-    fetchData();
+        try
+        {
+          const staffsResponse = await apiServices.getAllStaffs();
+          setStaffs( staffsResponse );
+          console.log( staffs );
+        } catch ( error )
+        {
+          console.error( "Error fetching data:", error );
+        }
+      };
+      fetchData();
+    }
+
   }, [ refresh ] );
 
   const totalPages = Math.ceil( staffs.length / itemsPerPage );
@@ -69,7 +78,7 @@ const StaffsTable = () =>
             <thead>
               <tr>
                 <th>Avatar</th>
-                <th>Staffname</th>
+                <th>Username</th>
                 <th>Email</th>
                 <th>Phone</th>
                 <th>Address</th>
@@ -139,7 +148,7 @@ const StaffsTable = () =>
       </Card>
 
       {/* Add/Edit Staffs Modal */ }
-      { modal && (
+      { account.role === "ADMIN" && modal && (
         <StaffModal
           id={ modalId }
           modal={ modal }

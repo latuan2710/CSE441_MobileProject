@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 public class VerificationToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
 
     @Column(nullable = false)
     private String token;
@@ -25,7 +25,8 @@ public class VerificationToken {
     @Column(nullable = false)
     private LocalDateTime expiryDate;
 
-    public VerificationToken() {}
+    public VerificationToken() {
+    }
 
     public VerificationToken(User user, String token) {
         this.user = user;
@@ -35,6 +36,6 @@ public class VerificationToken {
     }
 
     private LocalDateTime calculateExpiryDate() {
-        return LocalDateTime.now().plusHours(24); // Token expires in 24 hours
+        return LocalDateTime.now().plusHours(24);
     }
 }

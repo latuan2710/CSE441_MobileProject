@@ -19,32 +19,34 @@ import org.springframework.web.filter.CorsFilter;
 public class SecurityConfig {
 
     @Bean
-    public CorsFilter corsFilter() {
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(true);
-        config.addAllowedOrigin("http://localhost:5173");
-        config.addAllowedHeader("*");
-        config.addAllowedMethod("*");
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);
-        return new CorsFilter(source);
-    }
-
-    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .addFilterBefore(customAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/users/profile").permitAll()
-                        .requestMatchers("/api/users/upload").permitAll()
-                        .requestMatchers("/api/service/**").permitAll()
-                        .requestMatchers("/api/service/products/**").permitAll()
-                        .requestMatchers("/api/service/brands/**").permitAll()
-                        .requestMatchers("/api/admin/role/*").hasAuthority("ADMIN")
-                        .requestMatchers("/api/admin/**").hasAnyAuthority("ADMIN", "STAFF")
+                        .requestMatchers(
+                                "/api/auth/logout",
+                                "/api/users/profile",
+                                "/api/users/upload").authenticated()
+
+                        .requestMatchers(
+                                "/api/auth/**",
+                                "/api/service/products",
+                                "/api/service/products/{id}",
+                                "/api/service/brands",
+                                "/api/service/categories",
+                                "api/service/subcategories").permitAll()
+
+                        .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
+                        .requestMatchers(
+                                "/api/admin/profile",
+                                "/api/admin/upload",
+                                "/api/users/**",
+                                "/api/service/products/**",
+                                "/api/service/brands/**",
+                                "/api/service/categories/**",
+                                "/api/service/subcategories/**").hasAnyAuthority("ADMIN", "STAFF")
+
                         .anyRequest().authenticated()
                 );
 

@@ -21,46 +21,46 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProduct(@PathVariable Long id) {
+    public ResponseEntity<Product> getProduct(@PathVariable int id) {
         return ResponseEntity.ok(productService.getProductById(id));
     }
 
     @PostMapping
     public ResponseEntity<Product> createProduct(@RequestPart Product product, @RequestPart("file") MultipartFile file) {
-       try {
-           return ResponseEntity.ok(productService.createProduct(product,file));
-       } catch (Exception e) {
-        e.printStackTrace();
-        return null;
+        try {
+            return ResponseEntity.ok(productService.createProduct(product, file));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
 
     }
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product product) {
+    public ResponseEntity<Product> updateProduct(@PathVariable int id, @RequestBody Product product) {
         return ResponseEntity.ok(productService.updateProduct(id, product));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteProduct(@PathVariable int id) {
         productService.deleteProduct(id);
         return ResponseEntity.noContent().build();
     }
 
     // New endpoints
     @GetMapping("/category/{categoryId}")
-    public List<Product> getProductsByCategoryId(@PathVariable Long categoryId) {
+    public List<Product> getProductsByCategoryId(@PathVariable int categoryId) {
         return productService.getProductsByCategoryId(categoryId);
     }
 
     @GetMapping("/subcategory/{subcategoryId}")
-    public List<Product> getProductsBySubcategoryId(@PathVariable Long subcategoryId) {
+    public List<Product> getProductsBySubcategoryId(@PathVariable int subcategoryId) {
         return productService.getProductsBySubcategoryId(subcategoryId);
     }
 
     @GetMapping("/brand/{brandId}") // New endpoint
-    public List<Product> getProductsByBrandId(@PathVariable Long brandId) {
+    public List<Product> getProductsByBrandId(@PathVariable int brandId) {
         return productService.getProductsByBrandId(brandId);
     }
 }

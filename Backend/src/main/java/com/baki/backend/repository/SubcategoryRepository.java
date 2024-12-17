@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface SubcategoryRepository extends JpaRepository<Subcategory, Long> {
+public interface SubcategoryRepository extends JpaRepository<Subcategory, Integer> {
     Optional<Subcategory> findByName(String name);
 
-    List<Subcategory> findByCategoryId(Long categoryId);
+    List<Subcategory> findByCategoryId(int categoryId);
 }

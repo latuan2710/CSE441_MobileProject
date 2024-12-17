@@ -32,7 +32,7 @@ public class StaffService {
     private static final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" +
             "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 
-    public Staff create(Staff request,Long adminId) {
+    public Staff create(Staff request,int adminId) {
         Staff admin = getUserById(adminId);
         if (admin.getRole()== ERole.ADMIN) {
             Staff staff = new Staff();
@@ -83,12 +83,12 @@ public class StaffService {
         return staffRepository.findAll();
     }
 
-    public Staff getUserById(Long id) {
+    public Staff getUserById(int id) {
         return staffRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
-    public Staff updateUser(Long id, StaffDTO staffDTO) {
+    public Staff updateUser(int id, StaffDTO staffDTO) {
         Staff staff = getUserById(id);
 
         if (staffDTO.getEmail() != null) {
@@ -104,7 +104,7 @@ public class StaffService {
         return staffRepository.save(staff);
     }
 
-    public Staff updateUserRole(Long id, UpdateStaffRoleRequest request) {
+    public Staff updateUserRole(int id, UpdateStaffRoleRequest request) {
         Staff staff = getUserById(id);
 
         // Validate role
@@ -116,7 +116,7 @@ public class StaffService {
         return staffRepository.save(staff);
     }
 
-    public void fireStaff(Long id,Long adminId) {
+    public void fireStaff(int id,int adminId) {
         Staff admin = getUserById(adminId);
         if (admin.getRole()== ERole.ADMIN) {
             staffRepository.deleteById(id);
@@ -127,7 +127,7 @@ public class StaffService {
 
 
     }
-    public Staff updateProfile(Long id, ProfileDTO profileDTO) {
+    public Staff updateProfile(int id, ProfileDTO profileDTO) {
         Staff staff = getUserById(id);
 
         if (profileDTO.getEmail() != null) {
@@ -144,7 +144,7 @@ public class StaffService {
         return staffRepository.save(staff);
     }
 
-    public ResponseEntity<Map> uploadAvatar(Long id, MultipartFile file) {
+    public ResponseEntity<Map> uploadAvatar(int id, MultipartFile file) {
         try {
             Staff staff = getUserById(id);
             staff.setAvatar(cloudinaryService.uploadFile(file,"staffAvatar"));

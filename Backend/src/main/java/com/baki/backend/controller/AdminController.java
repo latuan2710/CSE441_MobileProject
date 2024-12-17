@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173/baki-admin/", allowCredentials = "true")
 @RequestMapping("/api/admin")
 public class AdminController {
 
@@ -26,24 +25,26 @@ public class AdminController {
     public ResponseEntity<List<Staff>> getAllStaffs() {
         return ResponseEntity.ok(staffService.getAllUsers());
     }
+
     @PostMapping
-    public ResponseEntity<Staff> createStaff(HttpSession session,@RequestBody Staff staffDTO) {
-        Long adminId = Long.parseLong(session.getAttribute("userId").toString());
-        return ResponseEntity.ok(staffService.create(staffDTO,adminId));
+    public ResponseEntity<Staff> createStaff(HttpSession session, @RequestBody Staff staffDTO) {
+        int adminId = Integer.parseInt(session.getAttribute("userId").toString());
+        return ResponseEntity.ok(staffService.create(staffDTO, adminId));
     }
+
     @GetMapping("/{id}")
-    public ResponseEntity<Staff> getStaff(@PathVariable Long id) {
+    public ResponseEntity<Staff> getStaff(@PathVariable int id) {
         return ResponseEntity.ok(staffService.getUserById(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Staff> updateStaff(@PathVariable Long id, @RequestBody StaffDTO staffDTO) {
+    public ResponseEntity<Staff> updateStaff(@PathVariable int id, @RequestBody StaffDTO staffDTO) {
         return ResponseEntity.ok(staffService.updateUser(id, staffDTO));
     }
-   
+
     @PutMapping("/profile")
     public ResponseEntity<Staff> updateProfile(HttpSession httpSession, @RequestBody ProfileDTO profileDTO) {
-        Long userId = (Long) httpSession.getAttribute("userId");
+        int userId = (int) httpSession.getAttribute("userId");
 
         Staff updatedStaff = staffService.updateProfile(userId, profileDTO);
         return ResponseEntity.ok(updatedStaff);
@@ -52,25 +53,26 @@ public class AdminController {
     @PutMapping("/upload")
     public ResponseEntity<Map> upload(HttpSession session, @RequestPart("file") MultipartFile file) {
         try {
-            Long id = Long.parseLong(session.getAttribute("userId").toString());
+            int id = Integer.parseInt(session.getAttribute("userId").toString());
             return staffService.uploadAvatar(id, file);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
+
     @GetMapping("/profile")
     public ResponseEntity<Staff> getProfile(HttpSession httpSession) {
-        Long userId = (Long) httpSession.getAttribute("userId");
+        int userId = (int) httpSession.getAttribute("userId");
 
         Staff updatedUser = staffService.getUserById(userId);
         return ResponseEntity.ok(updatedUser);
     }
 
     @DeleteMapping("/fire/{id}")
-    public ResponseEntity<?> fireStaff(HttpSession session,@PathVariable Long id) {
-        Long adminId = Long.parseLong(session.getAttribute("userId").toString());
-        staffService.fireStaff(id,adminId);
+    public ResponseEntity<?> fireStaff(HttpSession session, @PathVariable int id) {
+        int adminId = Integer.parseInt(session.getAttribute("userId").toString());
+        staffService.fireStaff(id, adminId);
         return ResponseEntity.ok().build();
     }
 }

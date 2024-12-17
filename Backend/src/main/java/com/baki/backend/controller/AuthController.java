@@ -18,7 +18,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "http://localhost:5173")
 @Slf4j
 public class AuthController {
 
@@ -55,11 +54,12 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) throws MessagingException {
 
-            User user = userService.register(request);
+        User user = userService.register(request);
 
-            return ResponseEntity.ok(user);
+        return ResponseEntity.ok(user);
 
     }
+
     @GetMapping("/verify")
     public ResponseEntity<?> verifyUser(@RequestParam("token") String token) {
         boolean verified = userService.verifyUser(token);
@@ -70,6 +70,7 @@ public class AuthController {
             return ResponseEntity.badRequest().body("Verification failed. Token may be invalid or expired.");
         }
     }
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request, HttpSession session) {
         try {
@@ -102,7 +103,7 @@ public class AuthController {
 
     @GetMapping("/check-session")
     public ResponseEntity<?> checkSession(HttpSession session) {
-        Long userId = (Long) session.getAttribute("userId");
+        Integer userId = (Integer) session.getAttribute("userId");
         if (userId != null) {
             return ResponseEntity.ok(Map.of("message", "Session is active"));
         } else {

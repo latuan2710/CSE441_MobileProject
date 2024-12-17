@@ -3,7 +3,7 @@ import lombok.Data;
 
 @Data
 public class StaffDTO {
-    private Long id;
+    private int id;
     private String username;
     private String email;
     private String phone;

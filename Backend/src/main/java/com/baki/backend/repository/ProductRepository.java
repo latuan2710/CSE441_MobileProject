@@ -8,12 +8,12 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ProductRepository extends JpaRepository<Product, Long> {
+public interface ProductRepository extends JpaRepository<Product, Integer> {
 
     @Query("SELECT p FROM Product p WHERE p.subcategory.category.id = :categoryId")
-    List<Product> findByCategoryId(Long categoryId);
+    List<Product> findByCategoryId(int categoryId);
 
-    List<Product> findBySubcategoryId(Long subcategoryId);
+    List<Product> findBySubcategoryId(int subcategoryId);
 
-    List<Product> findByBrandId(Long brandId); // New method
+    List<Product> findByBrandId(int brandId); // New method
 }

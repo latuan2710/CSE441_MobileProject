@@ -14,28 +14,29 @@ public class BrandService {
     private BrandRepository brandRepository;
     @Autowired
     private CloudinaryService cloudinaryService;
+
     public List<Brand> getAllBrands() {
         return brandRepository.findAll();
     }
 
-    public Brand getBrandById(Long id) {
+    public Brand getBrandById(int id) {
         return brandRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Brand not found"));
     }
 
     public Brand createBrand(Brand brand, MultipartFile file) {
-        brand.setLogo(cloudinaryService.uploadFile(file,"Logo"));
+        brand.setLogo(cloudinaryService.uploadFile(file, "Logo"));
         return brandRepository.save(brand);
     }
 
-    public Brand updateBrand(Long id, Brand brand) {
+    public Brand updateBrand(int id, Brand brand) {
         Brand existingBrand = getBrandById(id);
         existingBrand.setName(brand.getName());
         existingBrand.setLogo(brand.getLogo());
         return brandRepository.save(existingBrand);
     }
 
-    public void deleteBrand(Long id) {
+    public void deleteBrand(int id) {
         brandRepository.deleteById(id);
     }
 }

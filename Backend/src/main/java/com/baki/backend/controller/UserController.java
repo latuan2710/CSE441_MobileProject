@@ -18,7 +18,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/users")
-@CrossOrigin(origins = "http://localhost:5173/baki-admin/", allowCredentials = "true")
 public class UserController {
 
     @Autowired
@@ -31,34 +30,23 @@ public class UserController {
         return ResponseEntity.ok(newUser);
     }
 
-    // User Login
-    @PostMapping("/login")
-    public ResponseEntity<User> login(@RequestBody LoginRequest request) {
-        User loggedInUser = userService.login(request);
-        return ResponseEntity.ok(loggedInUser);
+    // Get All Users
+    @GetMapping
+    public ResponseEntity<List<User>> getAllUser() {
+        List<User> users = userService.getAllUsers();
+        return ResponseEntity.ok(users);
     }
 
-    // Get All Users
-    @GetMapping("/activeUsers")
-    public ResponseEntity<List<User>> getAllActiveUsers() {
-        List<User> users = userService.getAllActiveUsers();
-        return ResponseEntity.ok(users);
-    }
-    @GetMapping("/disableUsers")
-    public ResponseEntity<List<User>> getAllDisableUsers() {
-        List<User> users = userService.getAllDisableUsers();
-        return ResponseEntity.ok(users);
-    }
     // Get User by ID
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+    public ResponseEntity<User> getUserById(@PathVariable int id) {
         User user = userService.getUserById(id);
         return ResponseEntity.ok(user);
     }
 
     // Update User
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
+    public ResponseEntity<User> updateUser(@PathVariable int id, @RequestBody UserDTO userDTO) {
         User updatedUser = userService.updateUser(id, userDTO);
         return ResponseEntity.ok(updatedUser);
     }
@@ -66,7 +54,7 @@ public class UserController {
     // Get User Profile
     @GetMapping("/profile")
     public ResponseEntity<User> getProfile(HttpSession httpSession) {
-        Long userId = (Long) httpSession.getAttribute("userId");
+        int userId = (int) httpSession.getAttribute("userId");
 
         User updatedUser = userService.getUserById(userId);
         return ResponseEntity.ok(updatedUser);
@@ -75,7 +63,7 @@ public class UserController {
     // Update User Profile
     @PutMapping("/profile")
     public ResponseEntity<User> updateProfile(HttpSession httpSession, @RequestBody ProfileDTO profileDTO) {
-        Long userId = (Long) httpSession.getAttribute("userId");
+        int userId = (int) httpSession.getAttribute("userId");
 
         User updatedUser = userService.updateProfile(userId, profileDTO);
         return ResponseEntity.ok(updatedUser);
@@ -84,23 +72,22 @@ public class UserController {
     @PutMapping("/upload")
     public ResponseEntity<Map> upload(HttpSession session, @RequestPart("file") MultipartFile file) {
         try {
-            Long id = Long.parseLong(session.getAttribute("userId").toString());
+            int id = Integer.parseInt(session.getAttribute("userId").toString());
             return userService.uploadAvatar(id, file);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
-    @CrossOrigin(origins = "http://localhost:5173/baki-admin/", allowCredentials = "true")
+
     @PutMapping("/enable/{id}")
-    public ResponseEntity<Map> enableUser(@PathVariable Long id) {
+    public ResponseEntity<Map> enableUser(@PathVariable int id) {
 
         return userService.enabledUser(id);
     }
 
-    @CrossOrigin(origins = "http://localhost:5173/baki-admin/", allowCredentials = "true")
     @PutMapping("/disable/{id}")
-    public ResponseEntity<Map> disableUser(@PathVariable Long id) {
+    public ResponseEntity<Map> disableUser(@PathVariable int id) {
 
         return userService.disableUser(id);
     }

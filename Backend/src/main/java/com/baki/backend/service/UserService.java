@@ -20,22 +20,18 @@ import java.util.regex.Pattern;
 
 @Service
 public class UserService {
-
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private PasswordEncoder passwordEncoder;
-
     @Autowired
     private VerificationTokenRepository tokenRepository;
     @Autowired
     private EmailService emailService;
     @Autowired
     private CloudinaryService cloudinaryService;
-    // Email validation regex pattern
     private static final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" +
             "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 
@@ -74,6 +70,7 @@ public class UserService {
 
         return userRepository.save(user);
     }
+
     private String generateVerificationToken() {
         Random random = new Random();
         return String.format("%06d", random.nextInt(1000000));
@@ -103,6 +100,7 @@ public class UserService {
 
         return true;
     }
+
     public User login(LoginRequest request) {
         if (request.getUsernameOrEmail() == null || request.getUsernameOrEmail().trim().isEmpty()) {
             throw new RuntimeException("Username/Email cannot be empty");
@@ -120,7 +118,7 @@ public class UserService {
         if (user.isPresent()) {
             log.info("User found: {}", user.get().getUsername());
             if (passwordEncoder.matches(request.getPassword(), user.get().getPassword())) {
-                if(user.get().getStatus()) {
+                if (user.get().getStatus()) {
                     return user.get();
                 }
                 throw new RuntimeException("User is not activated");
@@ -132,32 +130,16 @@ public class UserService {
         throw new RuntimeException("User not found with username/email: " + usernameOrEmail);
     }
 
-    public List<User> getAllActiveUsers() {
-        List<User> allUser  = userRepository.findAll();
-        List<User> activeUser  = new ArrayList<User>() ;
-        for (User user : allUser) {
-            if(user.getStatus() == true) {
-                activeUser.add(user);
-            }
-        }
-        return activeUser;
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
-    public List<User> getAllDisableUsers() {
-        List<User> allUser  = userRepository.findAll();
-        List<User> disableUser  = new ArrayList<User>() ;
-        for (User user : allUser) {
-            if(user.getStatus() == false) {
-                disableUser.add(user);
-            }
-        }
-        return disableUser;
-    }
-    public User getUserById(Long id) {
+
+    public User getUserById(int id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
-    public User updateUser(Long id, UserDTO userDTO) {
+    public User updateUser(int id, UserDTO userDTO) {
         User user = getUserById(id);
 
         if (userDTO.getEmail() != null) {
@@ -173,21 +155,21 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public ResponseEntity<Map> enabledUser(Long id) {
+    public ResponseEntity<Map> enabledUser(int id) {
         User user = getUserById(id);
         user.setStatus(true);
         userRepository.save(user);
-        return ResponseEntity.ok().body(Map.of("user",user.getUsername(),"message", "User has been enabled"));
+        return ResponseEntity.ok().body(Map.of("user", user.getUsername(), "message", "User has been enabled"));
     }
 
-    public ResponseEntity<Map> disableUser(Long id) {
+    public ResponseEntity<Map> disableUser(int id) {
         User user = getUserById(id);
         user.setStatus(false);
         userRepository.save(user);
-        return ResponseEntity.ok().body(Map.of("user",user.getUsername(),"message", "User has been disabled"));
+        return ResponseEntity.ok().body(Map.of("user", user.getUsername(), "message", "User has been disabled"));
     }
 
-    public User updateProfile(Long id, ProfileDTO profileDTO) {
+    public User updateProfile(int id, ProfileDTO profileDTO) {
         User user = getUserById(id);
 
         if (profileDTO.getEmail() != null) {
@@ -203,14 +185,15 @@ public class UserService {
 
         return userRepository.save(user);
     }
-        public ResponseEntity<Map> uploadAvatar(Long id, MultipartFile file) {
+
+    public ResponseEntity<Map> uploadAvatar(int id, MultipartFile file) {
         try {
             User user = getUserById(id);
-            user.setAvatar(cloudinaryService.uploadFile(file,"Avatar"));
+            user.setAvatar(cloudinaryService.uploadFile(file, "Avatar"));
             userRepository.save(user);
             String data = user.getAvatar().toString();
 
-            return ResponseEntity.ok().body(Map.of("user",user
+            return ResponseEntity.ok().body(Map.of("user", user
             ));
         } catch (Exception e) {
             e.printStackTrace();
@@ -219,4 +202,6 @@ public class UserService {
 
 
     }
+
+
 }

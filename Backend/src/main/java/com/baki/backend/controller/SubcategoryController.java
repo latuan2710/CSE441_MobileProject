@@ -20,7 +20,7 @@ public class SubcategoryController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Subcategory> getSubcategory(@PathVariable Long id) {
+    public ResponseEntity<Subcategory> getSubcategory(@PathVariable int id) {
         return ResponseEntity.ok(subcategoryService.getSubcategoryById(id));
     }
 
@@ -30,18 +30,18 @@ public class SubcategoryController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Subcategory> updateSubcategory(@PathVariable Long id, @RequestBody Subcategory subcategory) {
+    public ResponseEntity<Subcategory> updateSubcategory(@PathVariable int id, @RequestBody Subcategory subcategory) {
         return ResponseEntity.ok(subcategoryService.updateSubcategory(id, subcategory));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteSubcategory(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteSubcategory(@PathVariable int id) {
         subcategoryService.deleteSubcategory(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/category/{categoryId}")
-    public List<Subcategory> getSubcategoriesByCategoryId(@PathVariable Long categoryId) {
+    public List<Subcategory> getSubcategoriesByCategoryId(@PathVariable int categoryId) {
         return subcategoryService.getSubcategoriesByCategoryId(categoryId);
     }
 }

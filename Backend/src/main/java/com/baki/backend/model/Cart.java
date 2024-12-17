@@ -14,7 +14,4 @@ public class Cart {
     @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
     @JoinColumn(nullable = false, name = "user_id")
     private User user;
-
-    @Column(name = "total_price",nullable = false)
-    private long totalPrice ;
 }

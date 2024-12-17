@@ -18,7 +18,7 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public Product getProductById(Long id) {
+    public Product getProductById(int id) {
         return productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
     }
@@ -28,7 +28,7 @@ public class ProductService {
         return productRepository.save(product);
     }
 
-//    public ResponseEntity<Map> uploadImage(Long id, MultipartFile file) {
+//    public ResponseEntity<Map> uploadImage(int id, MultipartFile file) {
 //        try {
 //            Product product = productRepository.findById(id)
 //                    .orElseThrow(() -> new RuntimeException("Product not found"));
@@ -45,7 +45,7 @@ public class ProductService {
 //
 //
 //    }
-    public Product updateProduct(Long id, Product product) {
+    public Product updateProduct(int id, Product product) {
         Product existingProduct = getProductById(id);
         existingProduct.setName(product.getName());
         existingProduct.setBrand(product.getBrand());
@@ -57,20 +57,20 @@ public class ProductService {
         return productRepository.save(existingProduct);
     }
 
-    public void deleteProduct(Long id) {
+    public void deleteProduct(int id) {
         productRepository.deleteById(id);
     }
 
     // New methods
-    public List<Product> getProductsByCategoryId(Long categoryId) {
+    public List<Product> getProductsByCategoryId(int categoryId) {
         return productRepository.findByCategoryId(categoryId);
     }
 
-    public List<Product> getProductsBySubcategoryId(Long subcategoryId) {
+    public List<Product> getProductsBySubcategoryId(int subcategoryId) {
         return productRepository.findBySubcategoryId(subcategoryId);
     }
 
-    public List<Product> getProductsByBrandId(Long brandId) {
+    public List<Product> getProductsByBrandId(int brandId) {
         return productRepository.findByBrandId(brandId); // New method
     }
 }

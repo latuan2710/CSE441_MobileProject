@@ -10,7 +10,7 @@ import lombok.Data;
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     @Column(nullable = false, length = 100)
     private String name;
@@ -26,17 +26,14 @@ public class Product {
     private Subcategory subcategory;
 
     @Column(nullable = false)
-    private Double price;
+    private double price;
 
     @Column(name = "stock_quantity", nullable = false)
     private Integer stockQuantity;
 
-    @Column(nullable = true)
     private String image;
 
-    @Column(nullable = true)
-    private Boolean sale;
+    private double sale = 0;
 
-    @Column(nullable = true)
-    private Double rating;
+    private double rating;
 }

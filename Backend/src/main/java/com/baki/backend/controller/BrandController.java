@@ -21,22 +21,22 @@ public class BrandController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Brand> getBrand(@PathVariable Long id) {
+    public ResponseEntity<Brand> getBrand(@PathVariable int id) {
         return ResponseEntity.ok(brandService.getBrandById(id));
     }
 
     @PostMapping
-    public ResponseEntity<Brand> createBrand(@RequestPart Brand brand,@RequestPart("file") MultipartFile file) {
-        return ResponseEntity.ok(brandService.createBrand(brand,file));
+    public ResponseEntity<Brand> createBrand(@RequestPart Brand brand, @RequestPart("file") MultipartFile file) {
+        return ResponseEntity.ok(brandService.createBrand(brand, file));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Brand> updateBrand(@PathVariable Long id, @RequestBody Brand brand) {
+    public ResponseEntity<Brand> updateBrand(@PathVariable int id, @RequestBody Brand brand) {
         return ResponseEntity.ok(brandService.updateBrand(id, brand));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteBrand(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteBrand(@PathVariable int id) {
         brandService.deleteBrand(id);
         return ResponseEntity.noContent().build();
     }

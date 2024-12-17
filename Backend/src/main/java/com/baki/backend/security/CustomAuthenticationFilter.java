@@ -29,13 +29,6 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-
-        response.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
-        response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-        response.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type, X-Requested-With");
-        response.setHeader("Access-Control-Allow-Credentials", "true");
-        
-
         // Handle preflight (OPTIONS) requests
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
             response.setStatus(HttpServletResponse.SC_OK);
@@ -46,7 +39,7 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
         logger.debug("Processing request: {}", request.getRequestURI());
 
         if (session != null) {
-            Long userId = (Long) session.getAttribute("userId");
+            Integer userId = (Integer) session.getAttribute("userId");
             String type = (String) session.getAttribute("type");
 
             if (type == null || type.equals("user")) {

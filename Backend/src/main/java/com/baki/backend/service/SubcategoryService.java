@@ -16,7 +16,7 @@ public class SubcategoryService {
         return subcategoryRepository.findAll();
     }
 
-    public Subcategory getSubcategoryById(Long id) {
+    public Subcategory getSubcategoryById(int id) {
         return subcategoryRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Subcategory not found"));
     }
@@ -25,17 +25,17 @@ public class SubcategoryService {
         return subcategoryRepository.save(subcategory);
     }
 
-    public Subcategory updateSubcategory(Long id, Subcategory subcategory) {
+    public Subcategory updateSubcategory(int id, Subcategory subcategory) {
         Subcategory existingSubcategory = getSubcategoryById(id);
         existingSubcategory.setName(subcategory.getName());
         return subcategoryRepository.save(existingSubcategory);
     }
 
-    public void deleteSubcategory(Long id) {
+    public void deleteSubcategory(int id) {
         subcategoryRepository.deleteById(id);
     }
 
-    public List<Subcategory> getSubcategoriesByCategoryId(Long categoryId) {
+    public List<Subcategory> getSubcategoriesByCategoryId(int categoryId) {
         return subcategoryRepository.findByCategoryId(categoryId);
     }
 }

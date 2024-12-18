@@ -22,35 +22,30 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    // User Registration
     @PostMapping("/register")
     public ResponseEntity<User> register(@RequestBody RegisterRequest request) {
         User newUser = userService.register(request);
         return ResponseEntity.ok(newUser);
     }
 
-    // Get All Users
     @GetMapping
     public ResponseEntity<List<User>> getAllUser() {
         List<User> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
     }
 
-    // Get User by ID
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable int id) {
         User user = userService.getUserById(id);
         return ResponseEntity.ok(user);
     }
 
-    // Update User
     @PutMapping("/{id}")
     public ResponseEntity<User> updateUser(@PathVariable int id, @RequestBody UserDTO userDTO) {
         User updatedUser = userService.updateUser(id, userDTO);
         return ResponseEntity.ok(updatedUser);
     }
 
-    // Get User Profile
     @GetMapping("/profile")
     public ResponseEntity<User> getProfile(HttpSession httpSession) {
         int userId = (int) httpSession.getAttribute("userId");
@@ -59,7 +54,6 @@ public class UserController {
         return ResponseEntity.ok(updatedUser);
     }
 
-    // Update User Profile
     @PutMapping("/profile")
     public ResponseEntity<User> updateProfile(HttpSession httpSession, @RequestBody ProfileDTO profileDTO) {
         int userId = (int) httpSession.getAttribute("userId");

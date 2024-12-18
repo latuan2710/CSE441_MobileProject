@@ -239,7 +239,7 @@ const getAllStaffs = async () =>
 {
   try
   {
-    const response = await axios.get( `/api/admin/` );
+    const response = await axios.get( `/api/admin` );
     return response.data;
   } catch ( error )
   {

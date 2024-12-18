@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button, Card, CardBody, CardTitle, Table } from "reactstrap";
 import Notification from "../../Alert/Notification";
-import apiServices from "../../Controller/apiServices";
+import { getAllBrands, getAllCategories, getAllProducts } from "../../Controller/apiServices";
 import "../../Style/style.css";
 import ProductModal from "../modal/ProductModal";
 
@@ -32,9 +32,9 @@ const ProductsTable = () =>
         try
         {
           // Fetch all required data
-          const productsResponse = await apiServices.getAllProducts();
-          const brandsResponse = await apiServices.getAllBrands();
-          const categoriesResponse = await apiServices.getAllCategories();
+          const productsResponse = await getAllProducts();
+          const brandsResponse = await getAllBrands();
+          const categoriesResponse = await getAllCategories();
 
           // Convert brands and categories to lookup objects
           const brandsMap = {};

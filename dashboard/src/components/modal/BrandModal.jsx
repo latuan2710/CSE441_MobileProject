@@ -10,7 +10,11 @@ import {
   ModalFooter,
   ModalHeader,
 } from "reactstrap";
-import apiServices from "../../Controller/apiServices";
+import {
+  addBrand,
+  getBrandById,
+  updateBrand,
+} from "../../Controller/apiServices";
 
 export default function BrandModal({
   modal,
@@ -23,12 +27,11 @@ export default function BrandModal({
   const [logo, setLogo] = useState(null);
   const [preview, setPreview] = useState("");
 
-  const nameRef = useRef();
   const logoRef = useRef();
 
-  const updateBrand = async () => {
+  const handleUpdateBrand = async () => {
     try {
-      const response = await apiServices.updateBrand({ name, logo });
+      const response = await updateBrand({ name, logo });
       if (response.status === 201 || response.status === 200) {
         setSuccessMessage("Brand updated successfully!");
         setTimeout(() => {
@@ -46,9 +49,9 @@ export default function BrandModal({
     }
   };
 
-  const addBrand = async () => {
+  const handleAddBrand = async () => {
     try {
-      const response = await apiServices.addBrand({ name, logo });
+      const response = await addBrand({ name, logo });
       if (response.status === 201 || response.status === 200) {
         setSuccessMessage("Brand added successfully!");
         setTimeout(() => {
@@ -96,10 +99,10 @@ export default function BrandModal({
 
     try {
       if (id) {
-        await apiServices.updateBrand({ id,name, logo });
+        await handleUpdateBrand({ id, name, logo });
         setSuccessMessage("Brand updated successfully!");
       } else {
-        await apiServices.addBrand({ name, logo });
+        await handleAddBrand({ name, logo });
         setSuccessMessage("Brand added successfully!");
       }
       setTimeout(() => {
@@ -122,7 +125,7 @@ export default function BrandModal({
     const fetchBrand = async () => {
       if (id !== null) {
         setName("...Loading");
-        const data = await apiServices.getBrandById(id);
+        const data = await getBrandById(id);
         setName(data.name);
         setPreview(data.logo);
       }

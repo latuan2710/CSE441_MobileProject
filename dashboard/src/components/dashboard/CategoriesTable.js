@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { Button, Card, CardBody, CardTitle, Table } from "reactstrap";
 import Notification from "../../Alert/Notification";
-import apiServices from "../../Controller/apiServices";
 import CategoryModal from "../modal/CategoryModal";
 import "../../Style/style.css";
+import { getAllCategories } from "../../Controller/apiServices";
 
 const CategoriesTable = () =>
 {
@@ -32,7 +32,7 @@ const CategoriesTable = () =>
     {
       const fetchCategories = async () =>
       {
-        const response = await apiServices.getAllCategories();
+        const response = await getAllCategories();
         setCategories( response );
       };
       fetchCategories();

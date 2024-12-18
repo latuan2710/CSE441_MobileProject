@@ -10,7 +10,13 @@ import {
   ModalFooter,
   ModalHeader,
 } from "reactstrap";
-import apiServices from "../../Controller/apiServices";
+import {
+  addProduct,
+  getAllBrands,
+  getAllCategories,
+  getProductById,
+  updateProduct,
+} from "../../Controller/apiServices";
 
 export default function ProductModal({
   modal,
@@ -35,8 +41,8 @@ export default function ProductModal({
   useEffect(() => {
     const fetchDropdownData = async () => {
       try {
-        const brandsData = await apiServices.getAllBrands();
-        const categoriesData = await apiServices.getAllCategories();
+        const brandsData = await getAllBrands();
+        const categoriesData = await getAllCategories();
         setBrands(brandsData);
         setCategories(categoriesData);
       } catch (error) {
@@ -51,7 +57,7 @@ export default function ProductModal({
   useEffect(() => {
     const fetchProduct = async () => {
       if (id !== null) {
-        const data = await apiServices.getProductById(id);
+        const data = await getProductById(id);
         setName(data.name);
         setPreview(data.image);
         setBrandId(data.brandId);
@@ -86,10 +92,10 @@ export default function ProductModal({
 
     try {
       if (id) {
-        await apiServices.updateProduct({ id, ...Object.fromEntries(formData) });
+        await updateProduct({ id, ...Object.fromEntries(formData) });
         setSuccessMessage("Product updated successfully!");
       } else {
-        await apiServices.addProduct(Object.fromEntries(formData));
+        await addProduct(Object.fromEntries(formData));
         setSuccessMessage("Product added successfully!");
       }
       setTimeout(() => {
@@ -102,7 +108,9 @@ export default function ProductModal({
         `Error ${id ? "updating" : "adding"} product:`,
         error.message
       );
-      alert(`An error occurred while ${id ? "updating" : "adding"} the product.`);
+      alert(
+        `An error occurred while ${id ? "updating" : "adding"} the product.`
+      );
     }
   };
 

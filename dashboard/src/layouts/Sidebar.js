@@ -1,6 +1,5 @@
 import { Button, Nav, NavItem } from "reactstrap";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import probg from "../assets/images/bg/download.jpg";
 import { useEffect } from "react";
 
 const navigation = [
@@ -66,11 +65,17 @@ const Sidebar = () => {
       {account && (
         <div
           className="profilebg"
-          style={{ background: `url(${probg}) no-repeat` }}
+          style={{
+            background: `url(${require("../assets/images/bg/download.jpg")}) no-repeat`,
+          }}
         >
           <div className="p-3 d-flex">
             <img
-              src={account.avatar}
+              src={
+                account.avatar
+                  ? account.avatar
+                  : require("../assets/images/users/user2.jpg")
+              }
               alt="user"
               width="50"
               className="rounded-circle"

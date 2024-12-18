@@ -10,7 +10,11 @@ import {
   ModalFooter,
   ModalHeader,
 } from "reactstrap";
-import apiServices from "../../Controller/apiServices";
+import {
+  addUser,
+  getUserById,
+  updateUser,
+} from "../../Controller/apiServices";
 
 export default function UserModal({
   modal,
@@ -21,11 +25,12 @@ export default function UserModal({
 }) {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const [avatar, setAvatar] = useState(null);
-  const [ preview, setPreview ] = useState( "" );
-  const [ status, setStatus ] = useState( "" );
+  const [preview, setPreview] = useState("");
+  const [status, setStatus] = useState("");
 
   const avatarRef = useRef();
 
@@ -34,13 +39,13 @@ export default function UserModal({
     const fetchUser = async () => {
       if (id !== null) {
         try {
-          const data = await apiServices.getUserById(id);
+          const data = await getUserById(id);
           setUsername(data.username);
           setEmail(data.email);
           setPhone(data.phone);
           setAddress(data.address);
-          setPreview( data.avatar );
-          setStatus( data.status );
+          setPreview(data.avatar);
+          setStatus(data.status);
         } catch (error) {
           console.error("Error fetching user:", error.message);
         }
@@ -62,20 +67,12 @@ export default function UserModal({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formData = new FormData();
-    formData.append("username", username);
-    formData.append("email", email);
-    formData.append("phone", phone);
-    formData.append("address", address);
-    formData.append( "avatar", avatar );
-    formData.append( "status", status );
-    
     try {
       if (id) {
-        await apiServices.updateUser({ id, ...Object.fromEntries(formData) });
+        await updateUser(id, { id, phone, address, status }, avatar);
         setSuccessMessage("User updated successfully!");
       } else {
-        await apiServices.addUser(Object.fromEntries(formData));
+        await addUser({ username, email, password, phone, address }, avatar);
         setSuccessMessage("User added successfully!");
       }
       setTimeout(() => setSuccessMessage(""), 2000);
@@ -140,6 +137,21 @@ export default function UserModal({
             />
           </FormGroup>
 
+          {/* Password */}
+          {!id && (
+            <FormGroup>
+              <Label for="password">Password</Label>
+              <Input
+                type="password"
+                name="password"
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </FormGroup>
+          )}
+
           {/* Phone */}
           <FormGroup>
             <Label for="phone">Phone</Label>
@@ -149,7 +161,6 @@ export default function UserModal({
               id="phone"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              required
             />
           </FormGroup>
 
@@ -162,23 +173,24 @@ export default function UserModal({
               id="address"
               value={address}
               onChange={(e) => setAddress(e.target.value)}
-              required
             />
           </FormGroup>
 
-           <FormGroup>
-            <Label for="status">Status</Label>
-            <Input
-              type="select"
-              name="status"
-              id="status"
-              value={status}
-              onChange={(e) => setStatus(e.target.value === "true")}
-            >
-              <option value="true">Active</option>
-              <option value="false">Inactive</option>
-            </Input>
-          </FormGroup>
+          {id && (
+            <FormGroup>
+              <Label for="status">Status</Label>
+              <Input
+                type="select"
+                name="status"
+                id="status"
+                value={status}
+                onChange={(e) => setStatus(e.target.value === "true")}
+              >
+                <option value="true">Active</option>
+                <option value="false">Inactive</option>
+              </Input>
+            </FormGroup>
+          )}
 
           <ModalFooter>
             <Button type="submit" color="primary">

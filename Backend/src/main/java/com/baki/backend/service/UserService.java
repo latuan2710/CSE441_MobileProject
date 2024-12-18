@@ -48,7 +48,7 @@ public class UserService {
         user.setPhone(request.getPhone());
         user.setAddress(request.getAddress());
         user.setStatus(true);
-        
+
         return userRepository.save(user);
     }
 
@@ -90,17 +90,17 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
-    public User updateUser(int id, UserDTO userDTO) {
+    public User updateUser(int id, UserDTO userDTO, MultipartFile file) {
         User user = getUserById(id);
 
-        if (userDTO.getEmail() != null) {
-            user.setEmail(userDTO.getEmail());
-        }
         if (userDTO.getPhone() != null) {
             user.setPhone(userDTO.getPhone());
         }
         if (userDTO.getAddress() != null) {
             user.setAddress(userDTO.getAddress());
+        }
+        if (file != null) {
+            user.setAvatar(cloudinaryService.uploadFile(file, "avatar"));
         }
 
         return userRepository.save(user);
@@ -140,7 +140,7 @@ public class UserService {
     public ResponseEntity<Map> uploadAvatar(int id, MultipartFile file) {
         try {
             User user = getUserById(id);
-            user.setAvatar(cloudinaryService.uploadFile(file, "Avatar"));
+            user.setAvatar(cloudinaryService.uploadFile(file, "avatar"));
             userRepository.save(user);
             String data = user.getAvatar().toString();
 

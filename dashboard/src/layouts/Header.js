@@ -1,6 +1,5 @@
 import React from "react";
-import
-{
+import {
   Button,
   Collapse,
   Dropdown,
@@ -10,36 +9,32 @@ import
   Nav,
   NavItem,
   Navbar,
-  NavbarBrand
+  NavbarBrand,
 } from "reactstrap";
 import { ReactComponent as LogoWhite } from "../assets/images/logos/materialprowhite.svg";
 import Logo from "./Logo";
 import { useNavigate } from "react-router-dom";
 
-const Header = () =>
-{
-  const [ isOpen, setIsOpen ] = React.useState( false );
+const Header = () => {
+  const [isOpen, setIsOpen] = React.useState(false);
   const navigate = useNavigate();
 
-  const [ dropdownOpen, setDropdownOpen ] = React.useState( false );
+  const [dropdownOpen, setDropdownOpen] = React.useState(false);
 
-  const account = JSON.parse( sessionStorage.getItem( "account" ) );
+  const account = JSON.parse(sessionStorage.getItem("account"));
 
-  const toggle = () => setDropdownOpen( ( prevState ) => !prevState );
-  const Handletoggle = () =>
-  {
-    setIsOpen( !isOpen );
+  const toggle = () => setDropdownOpen((prevState) => !prevState);
+  const Handletoggle = () => {
+    setIsOpen(!isOpen);
   };
-  const showMobilemenu = () =>
-  {
-    document.getElementById( "sidebarArea" ).classList.toggle( "showSidebar" );
+  const showMobilemenu = () => {
+    document.getElementById("sidebarArea").classList.toggle("showSidebar");
   };
 
-  const logout = () =>
-  {
-    sessionStorage.removeItem( "account" );
-    navigate( "/login" );
-  }
+  const logout = () => {
+    sessionStorage.removeItem("account");
+    navigate("/login");
+  };
   return (
     <Navbar color="primary" dark expand="md" className="fix-header">
       <div className="d-flex align-items-center">
@@ -52,7 +47,7 @@ const Header = () =>
         <Button
           color="primary"
           className=" d-lg-none"
-          onClick={ () => showMobilemenu() }
+          onClick={() => showMobilemenu()}
         >
           <i className="bi bi-list"></i>
         </Button>
@@ -62,34 +57,39 @@ const Header = () =>
           color="primary"
           size="sm"
           className="d-sm-block d-md-none"
-          onClick={ Handletoggle }
+          onClick={Handletoggle}
         >
-          { isOpen ? (
+          {isOpen ? (
             <i className="bi bi-x"></i>
           ) : (
             <i className="bi bi-three-dots-vertical"></i>
-          ) }
+          )}
         </Button>
       </div>
 
-      <Collapse navbar isOpen={ isOpen }>
+      <Collapse navbar isOpen={isOpen}>
         <Nav className="me-auto" navbar>
-          <NavItem>
-          </NavItem>
+          <NavItem></NavItem>
         </Nav>
-        <Dropdown isOpen={ dropdownOpen } toggle={ toggle }>
+        <Dropdown isOpen={dropdownOpen} toggle={toggle}>
           <DropdownToggle color="transparent">
-            <img
-              src={ account ? account.avatar : null }
-              alt="profile"
-              className="rounded-circle"
-              width="30"
-            ></img>
+            {account && (
+              <img
+                src={
+                  account.avatar
+                    ? account.avatar
+                    : require("../assets/images/users/user2.jpg")
+                }
+                alt="profile"
+                className="rounded-circle"
+                width="30"
+              ></img>
+            )}
           </DropdownToggle>
           <DropdownMenu>
             <DropdownItem header>Actions</DropdownItem>
-            {/* <DropdownItem divider /> */ }
-            <DropdownItem onClick={ () => logout() }>Logout</DropdownItem>
+            {/* <DropdownItem divider /> */}
+            <DropdownItem onClick={() => logout()}>Logout</DropdownItem>
           </DropdownMenu>
         </Dropdown>
       </Collapse>

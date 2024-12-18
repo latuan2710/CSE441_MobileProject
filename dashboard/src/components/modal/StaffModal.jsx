@@ -10,7 +10,7 @@ import {
   ModalFooter,
   ModalHeader,
 } from "reactstrap";
-import apiServices from "../../Controller/apiServices";
+import { addStaff, getStaffById, updateStaff } from "../../Controller/apiServices";
 
 export default function StaffModal({
   modal,
@@ -34,7 +34,7 @@ export default function StaffModal({
     const fetchStaff = async () => {
       if (id !== null) {
         try {
-          const data = await apiServices.getStaffById(id);
+          const data = await getStaffById(id);
           setUsername(data.username);
           setEmail(data.email);
           setPhone(data.phone);
@@ -72,10 +72,10 @@ export default function StaffModal({
     
     try {
       if (id) {
-        await apiServices.updateStaff({ id, ...Object.fromEntries(formData) });
+        await updateStaff({ id, ...Object.fromEntries(formData) });
         setSuccessMessage("User updated successfully!");
       } else {
-        await apiServices.addStaff(Object.fromEntries(formData));
+        await addStaff(Object.fromEntries(formData));
         setSuccessMessage("User added successfully!");
       }
       setTimeout(() => setSuccessMessage(""), 2000);

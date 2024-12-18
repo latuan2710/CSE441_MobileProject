@@ -22,12 +22,6 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody RegisterRequest request) {
-        User newUser = userService.register(request);
-        return ResponseEntity.ok(newUser);
-    }
-
     @GetMapping
     public ResponseEntity<List<User>> getAllUser() {
         List<User> users = userService.getAllUsers();
@@ -40,9 +34,20 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
+    @PostMapping
+    public ResponseEntity<User> createUser(@RequestPart RegisterRequest request, @RequestPart("file") MultipartFile file) {
+        User newUser = userService.register(request);
+
+        if (file != null) {
+            userService.uploadAvatar(newUser.getId(), file);
+        }
+
+        return ResponseEntity.ok(newUser);
+    }
+
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable int id, @RequestBody UserDTO userDTO) {
-        User updatedUser = userService.updateUser(id, userDTO);
+    public ResponseEntity<User> updateUser(@PathVariable int id, @RequestPart UserDTO userDTO, @RequestPart("file") MultipartFile file) {
+        User updatedUser = userService.updateUser(id, userDTO, file);
         return ResponseEntity.ok(updatedUser);
     }
 

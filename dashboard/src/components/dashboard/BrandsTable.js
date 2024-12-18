@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { Button, Card, CardBody, CardTitle, Table } from "reactstrap";
 import Notification from "../../Alert/Notification";
-import apiServices from "../../Controller/apiServices";
 import "../../Style/style.css";
 import BrandModal from "../modal/BrandModal";
+import { getAllBrands } from "../../Controller/apiServices";
 
 const BrandsTable = () =>
 {
@@ -26,7 +26,7 @@ const BrandsTable = () =>
     {
       const fetchBrands = async () =>
       {
-        const response = await apiServices.getAllBrands();
+        const response = await getAllBrands();
         setBrands( response );
       };
       fetchBrands();

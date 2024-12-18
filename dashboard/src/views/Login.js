@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "../Style/login.css";
-import apiServices from "../Controller/apiServices";
 import { useNavigate } from "react-router-dom";
+import { getLogin } from "../Controller/apiServices";
 
 const Login = () =>
 {
@@ -13,7 +13,7 @@ const Login = () =>
   {
     e.preventDefault();
 
-    const response = await apiServices.getLogin( username, password );
+    const response = await getLogin( username, password );
     if ( response.status === 200 || response.status === 201 )
     {
       sessionStorage.setItem( "account", JSON.stringify( response.data ) );

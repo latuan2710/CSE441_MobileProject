@@ -10,7 +10,7 @@ import {
   ModalFooter,
   ModalHeader,
 } from "reactstrap";
-import apiServices from "../../Controller/apiServices";
+import { addCategory, getCategogyById, updateCategory } from "../../Controller/apiServices";
 
 export default function CategoryModal({
   id,
@@ -25,7 +25,7 @@ export default function CategoryModal({
     const fetchCategory = async () => {
       if (id !== null) {
         setName("...Loading");
-        const data = await apiServices.getCategogyById(id);
+        const data = await getCategogyById(id);
         setName(data.name);
       }
     };
@@ -34,7 +34,7 @@ export default function CategoryModal({
 
   const handleAdd = async () => {
     try {
-      const response = await apiServices.addCategory({ name });
+      const response = await addCategory({ name });
       if (response.status === 201 || response.status === 200) {
         setSuccessMessage("Category added successfully!");
         setTimeout(() => {
@@ -54,7 +54,7 @@ export default function CategoryModal({
 
   const handleUpdate = async () => {
     try {
-      const response = await apiServices.updateCategory(id, name);
+      const response = await updateCategory(id, name);
       if (response.status === 201 || response.status === 200) {
         setSuccessMessage("Category updated successfully!");
         setTimeout(() => {

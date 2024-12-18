@@ -2,6 +2,10 @@ package com.baki.backend.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -16,7 +20,7 @@ public class Order {
     private User user;
 
     @Column(name = "total_price", nullable = false)
-    private long totalPrice;
+    private double totalPrice;
 
     @Column(name = "receiver_name", nullable = false)
     private String receiverName;
@@ -30,4 +34,12 @@ public class Order {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private EOrderStatus status = EOrderStatus.PENDING;
+
+    @CreationTimestamp
+    @Column(name = "create_at", nullable = false, updatable = false)
+    private LocalDateTime createAt;
+
+    @UpdateTimestamp
+    @Column(name = "update_at", nullable = false)
+    private LocalDateTime updateAt;
 }

@@ -14,6 +14,7 @@ public class ProductService {
     private ProductRepository productRepository;
     @Autowired
     private CloudinaryService cloudinaryService;
+
     public List<Product> getAllProducts() {
         return productRepository.findAll();
     }
@@ -23,29 +24,12 @@ public class ProductService {
                 .orElseThrow(() -> new RuntimeException("Product not found"));
     }
 
-    public Product createProduct(Product product,MultipartFile file) {
-        product.setImage(cloudinaryService.uploadFile(file,"products"));
+    public Product createProduct(Product product, MultipartFile file) {
+        product.setImage(cloudinaryService.uploadFile(file, "products"));
         return productRepository.save(product);
     }
 
-//    public ResponseEntity<Map> uploadImage(int id, MultipartFile file) {
-//        try {
-//            Product product = productRepository.findById(id)
-//                    .orElseThrow(() -> new RuntimeException("Product not found"));
-//            product.setImage(cloudinaryService.uploadFile(file,"products"));
-//            productRepository.save(product);
-//            String data = product.getImage().toString();
-//
-//            return ResponseEntity.ok().body(Map.of("url",data, "product",product
-//            ));
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return null;
-//        }
-//
-//
-//    }
-    public Product updateProduct(int id, Product product) {
+    public Product updateProduct(int id, Product product, MultipartFile file) {
         Product existingProduct = getProductById(id);
         existingProduct.setName(product.getName());
         existingProduct.setBrand(product.getBrand());
@@ -54,6 +38,10 @@ public class ProductService {
         existingProduct.setImage(product.getImage());
         existingProduct.setSale(product.getSale());
         existingProduct.setRating(product.getRating());
+
+        if (file != null)
+            existingProduct.setImage(cloudinaryService.uploadFile(file, "products"));
+
         return productRepository.save(existingProduct);
     }
 

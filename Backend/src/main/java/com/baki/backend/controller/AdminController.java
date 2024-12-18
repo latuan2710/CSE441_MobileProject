@@ -32,10 +32,8 @@ public class AdminController {
     }
 
     @PostMapping
-    public ResponseEntity<Staff> createStaff(
-            HttpSession session, @RequestPart Staff staffDTO, @RequestPart MultipartFile file) {
-        int adminId = Integer.parseInt(session.getAttribute("userId").toString());
-        return ResponseEntity.ok(staffService.create(staffDTO, adminId, file));
+    public ResponseEntity<Staff> createStaff(@RequestPart Staff staffDTO, @RequestPart MultipartFile file) {
+        return ResponseEntity.ok(staffService.create(staffDTO, file));
     }
 
     @PutMapping("/{id}")
@@ -72,9 +70,8 @@ public class AdminController {
     }
 
     @DeleteMapping("/fire/{id}")
-    public ResponseEntity<?> fireStaff(HttpSession session, @PathVariable int id) {
-        int adminId = Integer.parseInt(session.getAttribute("userId").toString());
-        staffService.fireStaff(id, adminId);
+    public ResponseEntity<?> fireStaff( @PathVariable int id) {
+        staffService.fireStaff(id);
         return ResponseEntity.ok().build();
     }
 }

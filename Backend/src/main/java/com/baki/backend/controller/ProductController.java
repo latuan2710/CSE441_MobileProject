@@ -26,20 +26,15 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Product> createProduct(@RequestPart Product product, @RequestPart("file") MultipartFile file) {
-        try {
-            return ResponseEntity.ok(productService.createProduct(product, file));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-
+    public ResponseEntity<Product> createProduct(
+            @RequestPart Product product, @RequestPart("file") MultipartFile file) {
+        return ResponseEntity.ok(productService.createProduct(product, file));
     }
 
-
     @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable int id, @RequestBody Product product) {
-        return ResponseEntity.ok(productService.updateProduct(id, product));
+    public ResponseEntity<Product> updateProduct(
+            @PathVariable int id, @RequestPart Product product, @RequestPart("file") MultipartFile file) {
+        return ResponseEntity.ok(productService.updateProduct(id, product, file));
     }
 
     @DeleteMapping("/{id}")

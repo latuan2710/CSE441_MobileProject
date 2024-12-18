@@ -32,9 +32,9 @@ public class StaffService {
     private static final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" +
             "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 
-    public Staff create(Staff request,int adminId) {
+    public Staff create(Staff request, int adminId, MultipartFile file) {
         Staff admin = getUserById(adminId);
-        if (admin.getRole()== ERole.ADMIN) {
+        if (admin.getRole() == ERole.ADMIN) {
             Staff staff = new Staff();
             staff.setUsername(request.getUsername());
             staff.setPassword(passwordEncoder.encode(request.getPassword()));
@@ -44,13 +44,13 @@ public class StaffService {
             staff.setRole(ERole.STAFF);
             staff.setStatus(true);
 
+            if (file != null)
+                staff.setAvatar(cloudinaryService.uploadFile(file, "staffAvatar"));
+
             return staffRepository.save(staff);
         } else {
             throw new RuntimeException("You are not authorized to create staff");
         }
-
-
-
     }
 
     public Staff login(LoginRequest request) {
@@ -88,18 +88,17 @@ public class StaffService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
-    public Staff updateUser(int id, StaffDTO staffDTO) {
+    public Staff updateUser(int id, StaffDTO staffDTO, MultipartFile file) {
         Staff staff = getUserById(id);
 
-        if (staffDTO.getEmail() != null) {
-            staff.setEmail(staffDTO.getEmail());
-        }
         if (staffDTO.getPhone() != null) {
             staff.setPhone(staffDTO.getPhone());
         }
         if (staffDTO.getAddress() != null) {
             staff.setAddress(staffDTO.getAddress());
         }
+        if (file != null)
+            staff.setAvatar(cloudinaryService.uploadFile(file, "staffAvatar"));
 
         return staffRepository.save(staff);
     }
@@ -116,17 +115,17 @@ public class StaffService {
         return staffRepository.save(staff);
     }
 
-    public void fireStaff(int id,int adminId) {
+    public void fireStaff(int id, int adminId) {
         Staff admin = getUserById(adminId);
-        if (admin.getRole()== ERole.ADMIN) {
+        if (admin.getRole() == ERole.ADMIN) {
             staffRepository.deleteById(id);
         } else {
             throw new RuntimeException("You are not authorized to fire staff");
         }
 
 
-
     }
+
     public Staff updateProfile(int id, ProfileDTO profileDTO) {
         Staff staff = getUserById(id);
 
@@ -147,10 +146,10 @@ public class StaffService {
     public ResponseEntity<Map> uploadAvatar(int id, MultipartFile file) {
         try {
             Staff staff = getUserById(id);
-            staff.setAvatar(cloudinaryService.uploadFile(file,"staffAvatar"));
+            staff.setAvatar(cloudinaryService.uploadFile(file, "staffAvatar"));
             staffRepository.save(staff);
             String data = staff.getAvatar().toString();
-            return ResponseEntity.ok().body(Map.of("staff",staff
+            return ResponseEntity.ok().body(Map.of("staff", staff
             ));
         } catch (Exception e) {
             e.printStackTrace();

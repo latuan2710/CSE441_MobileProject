@@ -26,20 +26,22 @@ public class AdminController {
         return ResponseEntity.ok(staffService.getAllUsers());
     }
 
-    @PostMapping
-    public ResponseEntity<Staff> createStaff(HttpSession session, @RequestBody Staff staffDTO) {
-        int adminId = Integer.parseInt(session.getAttribute("userId").toString());
-        return ResponseEntity.ok(staffService.create(staffDTO, adminId));
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<Staff> getStaff(@PathVariable int id) {
         return ResponseEntity.ok(staffService.getUserById(id));
     }
 
+    @PostMapping
+    public ResponseEntity<Staff> createStaff(
+            HttpSession session, @RequestPart Staff staffDTO, @RequestPart MultipartFile file) {
+        int adminId = Integer.parseInt(session.getAttribute("userId").toString());
+        return ResponseEntity.ok(staffService.create(staffDTO, adminId, file));
+    }
+
     @PutMapping("/{id}")
-    public ResponseEntity<Staff> updateStaff(@PathVariable int id, @RequestBody StaffDTO staffDTO) {
-        return ResponseEntity.ok(staffService.updateUser(id, staffDTO));
+    public ResponseEntity<Staff> updateStaff(
+            @PathVariable int id, @RequestPart StaffDTO staffDTO, @RequestPart MultipartFile file) {
+        return ResponseEntity.ok(staffService.updateUser(id, staffDTO, file));
     }
 
     @PutMapping("/profile")

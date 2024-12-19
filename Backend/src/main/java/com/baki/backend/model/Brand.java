@@ -14,6 +14,6 @@ public class Brand {
     @Column(nullable = false, length = 100)
     private String name;
 
-    @Column(length = 100)
+    @Column(nullable = false)
     private String logo;
 }

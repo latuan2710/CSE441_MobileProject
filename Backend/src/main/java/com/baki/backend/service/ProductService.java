@@ -1,7 +1,12 @@
 package com.baki.backend.service;
 
+import com.baki.backend.dto.ProductDTO;
+import com.baki.backend.model.Brand;
 import com.baki.backend.model.Product;
+import com.baki.backend.model.Subcategory;
+import com.baki.backend.repository.BrandRepository;
 import com.baki.backend.repository.ProductRepository;
+import com.baki.backend.repository.SubcategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,6 +17,10 @@ import java.util.List;
 public class ProductService {
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private BrandRepository brandRepository;
+    @Autowired
+    private SubcategoryRepository subcategoryRepository;
     @Autowired
     private CloudinaryService cloudinaryService;
 
@@ -24,20 +33,36 @@ public class ProductService {
                 .orElseThrow(() -> new RuntimeException("Product not found"));
     }
 
-    public Product createProduct(Product product, MultipartFile file) {
-        product.setImage(cloudinaryService.uploadFile(file, "products"));
-        return productRepository.save(product);
+    public Product createProduct(ProductDTO productDTO, MultipartFile file) {
+        Subcategory subcategory = subcategoryRepository.findById(productDTO.getSubcategoryId())
+                .orElseThrow(() -> new RuntimeException("Subcategory not found"));
+        Brand brand = brandRepository.findById(productDTO.getBrandId())
+                .orElseThrow(() -> new RuntimeException("Brand not found"));
+
+        Product newProduct = new Product();
+
+        newProduct.setName(productDTO.getName());
+        newProduct.setBrand(brand);
+        newProduct.setSubcategory(subcategory);
+        newProduct.setPrice(productDTO.getPrice());
+        newProduct.setStockQuantity(productDTO.getStockQuantity());
+        newProduct.setImage(cloudinaryService.uploadFile(file, "products"));
+
+        return productRepository.save(newProduct);
     }
 
-    public Product updateProduct(int id, Product product, MultipartFile file) {
+    public Product updateProduct(int id, ProductDTO productDTO, MultipartFile file) {
         Product existingProduct = getProductById(id);
-        existingProduct.setName(product.getName());
-        existingProduct.setBrand(product.getBrand());
-        existingProduct.setPrice(product.getPrice());
-        existingProduct.setStockQuantity(product.getStockQuantity());
-        existingProduct.setImage(product.getImage());
-        existingProduct.setSale(product.getSale());
-        existingProduct.setRating(product.getRating());
+        Subcategory subcategory = subcategoryRepository.findById(productDTO.getSubcategoryId())
+                .orElseThrow(() -> new RuntimeException("Subcategory not found"));
+        Brand brand = brandRepository.findById(productDTO.getBrandId())
+                .orElseThrow(() -> new RuntimeException("Brand not found"));
+
+        existingProduct.setName(productDTO.getName());
+        existingProduct.setBrand(brand);
+        existingProduct.setSubcategory(subcategory);
+        existingProduct.setPrice(productDTO.getPrice());
+        existingProduct.setStockQuantity(productDTO.getStockQuantity());
 
         if (file != null)
             existingProduct.setImage(cloudinaryService.uploadFile(file, "products"));

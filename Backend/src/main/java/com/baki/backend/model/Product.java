@@ -32,8 +32,4 @@ public class Product {
     private Integer stockQuantity;
 
     private String image;
-
-    private double sale = 0;
-
-    private double rating;
 }

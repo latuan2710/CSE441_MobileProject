@@ -1,5 +1,6 @@
 package com.baki.backend.controller;
 
+import com.baki.backend.dto.ProductDTO;
 import com.baki.backend.model.Product;
 import com.baki.backend.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,13 +28,13 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<Product> createProduct(
-            @RequestPart Product product, @RequestPart("file") MultipartFile file) {
+            @RequestPart ProductDTO product, @RequestPart("file") MultipartFile file) {
         return ResponseEntity.ok(productService.createProduct(product, file));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Product> updateProduct(
-            @PathVariable int id, @RequestPart Product product, @RequestPart(value = "file", required = false) MultipartFile file) {
+            @PathVariable int id, @RequestPart ProductDTO product, @RequestPart(required = false) MultipartFile file) {
         return ResponseEntity.ok(productService.updateProduct(id, product, file));
     }
 

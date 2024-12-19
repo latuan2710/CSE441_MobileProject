@@ -38,7 +38,7 @@ public class AdminController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Staff> updateStaff(
-            @PathVariable int id, @RequestPart StaffDTO staffDTO, @RequestPart MultipartFile file) {
+            @PathVariable int id, @RequestPart StaffDTO staffDTO, @RequestPart(required = false) MultipartFile file) {
         return ResponseEntity.ok(staffService.updateUser(id, staffDTO, file));
     }
 

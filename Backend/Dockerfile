@@ -1,5 +1,5 @@
-# Use a lightweight image with JDK and Maven pre-installed
-FROM maven:3.9.5-eclipse-temurin-17 AS builder
+# Use a Maven image with JDK pre-installed
+FROM maven:3.9.5-eclipse-temurin-17
 
 # Set the working directory
 WORKDIR /app
@@ -8,20 +8,8 @@ WORKDIR /app
 COPY pom.xml .
 COPY src ./src
 
-# Build the application
-RUN mvn clean package -DskipTests
-
-# Create a runtime image using JDK
-FROM openjdk:17-jdk-slim
-
-# Set the working directory
-WORKDIR /app
-
-# Copy the built JAR file from the builder stage
-COPY --from=builder /app/target/*.jar app.jar
-
-# Expose the application's port
+# Expose the port your Spring Boot application runs on
 EXPOSE 8080
 
 # Command to run the application
-ENTRYPOINT ["java", "-jar", "app.jar"]
+CMD ["mvn", "spring-boot:run"]

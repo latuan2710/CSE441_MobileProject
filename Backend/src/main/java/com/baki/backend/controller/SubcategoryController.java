@@ -1,5 +1,6 @@
 package com.baki.backend.controller;
 
+import com.baki.backend.dto.SubCategoryDTO;
 import com.baki.backend.model.Subcategory;
 import com.baki.backend.service.SubcategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +26,13 @@ public class SubcategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<Subcategory> createSubcategory(@RequestBody Subcategory subcategory) {
-        return ResponseEntity.ok(subcategoryService.createSubcategory(subcategory));
+    public ResponseEntity<Subcategory> createSubcategory(@RequestBody SubCategoryDTO subCategoryDTO) {
+        return ResponseEntity.ok(subcategoryService.createSubcategory(subCategoryDTO));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Subcategory> updateSubcategory(@PathVariable int id, @RequestBody Subcategory subcategory) {
-        return ResponseEntity.ok(subcategoryService.updateSubcategory(id, subcategory));
+    public ResponseEntity<Subcategory> updateSubcategory(@PathVariable int id, @RequestBody SubCategoryDTO subCategoryDTO) {
+        return ResponseEntity.ok(subcategoryService.updateSubcategory(id, subCategoryDTO));
     }
 
     @DeleteMapping("/{id}")

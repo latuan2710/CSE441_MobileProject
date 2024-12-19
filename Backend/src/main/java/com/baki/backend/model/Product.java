@@ -17,12 +17,10 @@ public class Product {
 
     @ManyToOne
     @JoinColumn(name = "brand_id", nullable = false)
-    @JsonIgnore
     private Brand brand;
 
     @ManyToOne
     @JoinColumn(name = "subcategory_id", nullable = false)
-    @JsonIgnore
     private Subcategory subcategory;
 
     @Column(nullable = false)

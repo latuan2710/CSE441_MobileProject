@@ -12,8 +12,10 @@ const Grid = lazy( () => import( "../views/ui/Grid" ) );
 const Products = lazy( () => import( "../views/ui/Products" ) );
 const Brands = lazy( () => import( "../views/ui/Brands" ) );
 const Categories = lazy( () => import( "../views/ui/Categories" ) );
+const Subcategories = lazy( () => import( "../views/ui/Subcategories" ) );
 const Staffs = lazy( () => import( "../views/ui/Staffs" ) );
 const Users = lazy( () => import( "../views/ui/Users" ) );
+const Orders = lazy( () => import( "../views/ui/Orders" ) );
 
 /***** Routes ****/
 const ThemeRoutes = [
@@ -36,6 +38,8 @@ const ThemeRoutes = [
       { path: "/grid", element: <Grid /> },
       { path: "/staffs", element: <Staffs /> },
       { path: "/users", element: <Users /> },
+      { path: "/orders", element: <Orders /> },
+      { path: "/subcategories", element: <Subcategories /> },
     ],
   },
 ];

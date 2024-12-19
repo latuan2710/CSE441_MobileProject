@@ -15,8 +15,7 @@ public class Subcategory {
     @Column(nullable = false, length = 100)
     private String name;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id", nullable = false)
-    @JsonIgnore
     private Category category;
 }

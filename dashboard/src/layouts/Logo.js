@@ -1,10 +1,15 @@
-import { ReactComponent as LogoDark } from "../assets/images/logos/materialpro.svg";
 import { Link } from "react-router-dom";
 
-const Logo = () => {
+const Logo = () =>
+{
   return (
-    <Link to="/">
-      <LogoDark />
+    <Link to="/starter">
+      <img src={ require( "../assets/images/logos/baki.png" ) } alt="Logo" style={ {
+        maxWidth: '70px',
+        maxHeight: '60px',
+        filter: 'invert( 1 )'
+      } }
+      />
     </Link>
   );
 };

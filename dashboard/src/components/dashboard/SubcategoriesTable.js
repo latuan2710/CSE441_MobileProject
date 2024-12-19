@@ -1,22 +1,27 @@
 import { useEffect, useState } from "react";
 import { Button, Card, CardBody, CardTitle, Table } from "reactstrap";
 import Notification from "../../Alert/Notification";
-import { getAllBrands, getAllCategories, getAllProducts } from "../../Controller/apiServices";
+import SubcategoryModal from "../modal/SubcategoryModal";
 import "../../Style/style.css";
-import ProductModal from "../modal/ProductModal";
+import { getAllSubcategories } from "../../Controller/apiServices";
 
-const ProductsTable = () =>
+const SubcategoriesTable = () =>
 {
-  const [ successMessage, setSuccessMessage ] = useState( "" );
-  const [ products, setProducts ] = useState( [] );
+  const [ successMessage, setSuccessMessage ] = useState( "" ); // State for the success message
+  const [ subcategories, setSubcategories ] = useState( [] );
   const [ modal, setModal ] = useState( false );
   const [ modalId, setModalId ] = useState( null );
   const [ refresh, setRefresh ] = useState( 0 );
   const account = JSON.parse( sessionStorage.getItem( "account" ) );
 
-  // Paging States
   const [ currentPage, setCurrentPage ] = useState( 1 );
-  const itemsPerPage = 6; // Number of items per page
+  const itemsPerPage = 6;
+
+  const openModal = ( id = null ) =>
+  {
+    setModal( true );
+    setModalId( id );
+  };
 
   useEffect( () =>
   {
@@ -27,25 +32,21 @@ const ProductsTable = () =>
     {
       const fetchData = async () =>
       {
-        try
-        {
-          const productsResponse = await getAllProducts();
-          setProducts( productsResponse );
-        } catch ( error )
-        {
-          console.error( "Error fetching data:", error );
-        }
+        const response = await getAllSubcategories();
+        setSubcategories( response );
+        console.log( response );
       };
       fetchData();
     }
   }, [ refresh ] );
 
-  const totalPages = Math.ceil( products.length / itemsPerPage );
-  const displayed = products.slice(
+  const totalPages = Math.ceil( subcategories.length / itemsPerPage );
+  const displayed = subcategories.slice(
     ( currentPage - 1 ) * itemsPerPage,
     currentPage * itemsPerPage
   );
 
+  // Handle page changes
   const handlePageChange = ( pageNumber ) =>
   {
     if ( pageNumber >= 1 && pageNumber <= totalPages )
@@ -53,13 +54,11 @@ const ProductsTable = () =>
       setCurrentPage( pageNumber );
     }
   };
-
-  const openModal = ( id ) =>
+  const handleDelete = ( id ) =>
   {
-    setModal( true );
-    setModalId( id );
-  };
+    console.log( id );
 
+  }
   return (
     <div>
       {/* Show success message */ }
@@ -67,21 +66,15 @@ const ProductsTable = () =>
       <Card>
         <CardBody>
           <div className="d-flex justify-content-between align-items-center">
-            <CardTitle tag="h5">Products Listing</CardTitle>
+            <CardTitle tag="h5">Subcategories Listing</CardTitle>
             <Button color="primary" onClick={ () => openModal( null ) }>
-              Add Product
+              Add Subcategory
             </Button>
           </div>
           <Table className="no-wrap mt-3 align-middle" responsive borderless>
             <thead>
               <tr>
-                <th>Image</th>
                 <th>Name</th>
-                <th>Brand</th>
-                <th>Category</th>
-                <th>Subcategory</th>
-                <th>Price</th>
-                <th>In Stock</th>
               </tr>
             </thead>
             <tbody>
@@ -91,23 +84,7 @@ const ProductsTable = () =>
                   className="border-top clickable-row"
                   onClick={ () => openModal( tdata.id ) }
                 >
-                  <td>
-                    <div className="d-flex align-items-center p-2">
-                      <img
-                        src={ tdata.image }
-                        className="rounded-circle"
-                        alt={ tdata.name }
-                        width="45"
-                        height="45"
-                      />
-                    </div>
-                  </td>
-                  <td>{ tdata.name }</td>
-                  <td>{ tdata.brand.name }</td>
-                  <td>{ tdata.subcategory.name }</td>
-                  <td>{ tdata.subcategory.category.name }</td>
-                  <td>${ tdata.price }</td>
-                  <td>{ tdata.stockQuantity }</td>
+                  <td >{ tdata.name }</td>
                 </tr>
               ) ) }
             </tbody>
@@ -136,9 +113,9 @@ const ProductsTable = () =>
         </CardBody>
       </Card>
 
-      {/* Add/Edit Products Modal */ }
+      {/* Category Modal */ }
       { account.role === "ADMIN" && modal && (
-        <ProductModal
+        <SubcategoryModal
           id={ modalId }
           modal={ modal }
           setModal={ setModal }
@@ -150,4 +127,4 @@ const ProductsTable = () =>
   );
 };
 
-export default ProductsTable;
+export default SubcategoriesTable;

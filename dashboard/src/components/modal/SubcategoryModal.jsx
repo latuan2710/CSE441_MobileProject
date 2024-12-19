@@ -11,9 +11,9 @@ import
   ModalFooter,
   ModalHeader,
 } from "reactstrap";
-import { addCategory, getCategogyById, updateCategory } from "../../Controller/apiServices";
+import { addSubcategory, getAllCategories, getAllSubcategories, getSubcategoryById, updateSubcategory } from "../../Controller/apiServices";
 
-export default function CategoryModal ( {
+export default function SubcategoryModal ( {
   id,
   modal,
   setModal,
@@ -22,26 +22,39 @@ export default function CategoryModal ( {
 } )
 {
   const [ name, setName ] = useState( "" );
+  const [ categories, setCategories ] = useState( [] );
+  const [ categoryId, setCategoryId ] = useState( "" );
 
   useEffect( () =>
   {
-    const fetchCategory = async () =>
+
+    const fetchSubcategoyById = async () =>
     {
       if ( id !== null )
       {
-        setName( "...Loading" );
-        const data = await getCategogyById( id );
+        setName( "Loading" );
+        const data = await getSubcategoryById( id );
+        setCategoryId( data.category.id )
         setName( data.name );
       }
     };
-    fetchCategory();
-  }, [ id ] );
+
+    fetchSubcategoyById();
+
+    const fetchCategories = async () =>
+    {
+      const data = await getAllCategories();
+      setCategories( data );
+    };
+    fetchCategories();
+
+  }, [] );
 
   const handleAdd = async () =>
   {
     try
     {
-      const response = await addCategory( { name } );
+      const response = await addSubcategory( name, categoryId );
       if ( response.status === 201 || response.status === 200 )
       {
         setSuccessMessage( "Category added successfully!" );
@@ -63,11 +76,11 @@ export default function CategoryModal ( {
     }
   };
 
-  const handleUpdate = async () =>
+  const handleUpdate = async () =>  
   {
     try
     {
-      const response = await updateCategory( id, name );
+      const response = await updateSubcategory( id, name, categoryId );
       if ( response.status === 201 || response.status === 200 )
       {
         setSuccessMessage( "Category updated successfully!" );
@@ -91,9 +104,29 @@ export default function CategoryModal ( {
 
   return (
     <Modal isOpen={ modal } toggle={ () => setModal( false ) } size="xl">
-      <ModalHeader>{ id ? "Category Details" : "Add Category" }</ModalHeader>
+      <ModalHeader>{ id ? "Subcategory Details" : "Add Subcategory" }</ModalHeader>
       <ModalBody>
         <Form>
+
+          <FormGroup>
+            <Label for="categoryId">Category</Label>
+            <Input
+              type="select"
+              name="categoryId"
+              id="categoryId"
+              value={ categoryId }
+              onChange={ ( e ) => setCategoryId( e.target.value ) }
+              required
+            >
+              <option value="">Select Category</option>
+              { categories.map( ( category ) => (
+                <option key={ category.id } value={ category.id }>
+                  { category.name }
+                </option>
+              ) ) }
+            </Input>
+          </FormGroup>
+
           <FormGroup>
             <Label for="name">Name</Label>
             <Input
@@ -104,6 +137,7 @@ export default function CategoryModal ( {
               onChange={ ( e ) => setName( e.target.value ) }
             />
           </FormGroup>
+
         </Form>
       </ModalBody>
       <ModalFooter>
@@ -111,7 +145,7 @@ export default function CategoryModal ( {
           Cancel
         </Button>
         <Button color="primary" onClick={ id ? handleUpdate : handleAdd }>
-          { id ? "Update Category" : "Add Category" }
+          { id ? "Update Subcategory" : "Add Subcategory" }
         </Button>
       </ModalFooter>
     </Modal>

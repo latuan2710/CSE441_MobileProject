@@ -1,19 +1,19 @@
 import { useEffect, useState } from "react";
 import { Button, Card, CardBody, CardTitle, Table } from "reactstrap";
 import Notification from "../../Alert/Notification";
-import { getAllBrands, getAllCategories, getAllProducts } from "../../Controller/apiServices";
-import "../../Style/style.css";
-import ProductModal from "../modal/ProductModal";
+import { getAllOrders } from "../../Controller/apiServices";
+import OrderModal from "../modal/OrderModal";
 
-const ProductsTable = () =>
+import "../../Style/style.css";
+
+const OrdersTable = () =>
 {
   const [ successMessage, setSuccessMessage ] = useState( "" );
-  const [ products, setProducts ] = useState( [] );
+  const [ orders, setOrders ] = useState( [] );
   const [ modal, setModal ] = useState( false );
   const [ modalId, setModalId ] = useState( null );
   const [ refresh, setRefresh ] = useState( 0 );
   const account = JSON.parse( sessionStorage.getItem( "account" ) );
-
   // Paging States
   const [ currentPage, setCurrentPage ] = useState( 1 );
   const itemsPerPage = 6; // Number of items per page
@@ -29,8 +29,8 @@ const ProductsTable = () =>
       {
         try
         {
-          const productsResponse = await getAllProducts();
-          setProducts( productsResponse );
+          const response = await getAllOrders();
+          setOrders( response );
         } catch ( error )
         {
           console.error( "Error fetching data:", error );
@@ -40,8 +40,8 @@ const ProductsTable = () =>
     }
   }, [ refresh ] );
 
-  const totalPages = Math.ceil( products.length / itemsPerPage );
-  const displayed = products.slice(
+  const totalPages = Math.ceil( orders.length / itemsPerPage );
+  const displayed = orders.slice(
     ( currentPage - 1 ) * itemsPerPage,
     currentPage * itemsPerPage
   );
@@ -60,6 +60,11 @@ const ProductsTable = () =>
     setModalId( id );
   };
 
+
+  const handleStatusChange = () =>
+  {
+    console.log( "hehe" );
+  }
   return (
     <div>
       {/* Show success message */ }
@@ -67,21 +72,18 @@ const ProductsTable = () =>
       <Card>
         <CardBody>
           <div className="d-flex justify-content-between align-items-center">
-            <CardTitle tag="h5">Products Listing</CardTitle>
-            <Button color="primary" onClick={ () => openModal( null ) }>
-              Add Product
-            </Button>
+            <CardTitle tag="h5">Orders Listing</CardTitle>
           </div>
           <Table className="no-wrap mt-3 align-middle" responsive borderless>
             <thead>
               <tr>
-                <th>Image</th>
-                <th>Name</th>
-                <th>Brand</th>
-                <th>Category</th>
-                <th>Subcategory</th>
-                <th>Price</th>
-                <th>In Stock</th>
+                <th>User name</th>
+                <th>Receiver Name</th>
+                <th>Receiver Address</th>
+                <th>Receiver Phone</th>
+                <th>Total Price</th>
+                <th>Status</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -91,23 +93,45 @@ const ProductsTable = () =>
                   className="border-top clickable-row"
                   onClick={ () => openModal( tdata.id ) }
                 >
+                  <td>{ tdata.username }</td>
+                  <td>{ tdata.receivername }</td>
+                  <td>{ tdata.receiveraddress }</td>
+                  <td>{ tdata.receiverPhone }</td>
+                  <td>{ tdata.totalprice }</td>
+                  <td style={ { fontWeight: "900" } }>{ tdata.status }</td>
                   <td>
-                    <div className="d-flex align-items-center p-2">
-                      <img
-                        src={ tdata.image }
-                        className="rounded-circle"
-                        alt={ tdata.name }
-                        width="45"
-                        height="45"
-                      />
-                    </div>
+                    <Button
+                      color="warning"
+                      size="sm"
+                      className="me-1"
+                      onClick={ () => handleStatusChange( tdata.id, "PENDING" ) }
+                    >
+                      PENDING
+                    </Button>
+                    <Button
+                      color="info"
+                      size="sm"
+                      className="me-1"
+                      onClick={ () => handleStatusChange( tdata.id, "SHIPPING" ) }
+                    >
+                      SHIPPING
+                    </Button>
+                    <Button
+                      color="success"
+                      size="sm"
+                      className="me-1"
+                      onClick={ () => handleStatusChange( tdata.id, "COMPLETED" ) }
+                    >
+                      COMPLETED
+                    </Button>
+                    <Button
+                      color="danger"
+                      size="sm"
+                      onClick={ () => handleStatusChange( tdata.id, "CANCELLED" ) }
+                    >
+                      CANCELLED
+                    </Button>
                   </td>
-                  <td>{ tdata.name }</td>
-                  <td>{ tdata.brand.name }</td>
-                  <td>{ tdata.subcategory.name }</td>
-                  <td>{ tdata.subcategory.category.name }</td>
-                  <td>${ tdata.price }</td>
-                  <td>{ tdata.stockQuantity }</td>
                 </tr>
               ) ) }
             </tbody>
@@ -136,18 +160,20 @@ const ProductsTable = () =>
         </CardBody>
       </Card>
 
-      {/* Add/Edit Products Modal */ }
-      { account.role === "ADMIN" && modal && (
-        <ProductModal
-          id={ modalId }
-          modal={ modal }
-          setModal={ setModal }
-          setSuccessMessage={ setSuccessMessage }
-          setRefresh={ setRefresh }
-        />
-      ) }
-    </div>
+      {/* Add/Edit Oders Modal */ }
+      {
+        account.role === "ADMIN" && modal && (
+          <OrderModal
+            id={ modalId }
+            modal={ modal }
+            setModal={ setModal }
+            setSuccessMessage={ setSuccessMessage }
+            setRefresh={ setRefresh }
+          />
+        )
+      }
+    </div >
   );
 };
 
-export default ProductsTable;
+export default OrdersTable;

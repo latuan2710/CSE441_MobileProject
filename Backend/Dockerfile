@@ -1,13 +1,14 @@
-# Build stage
-FROM maven:3.8.5-openjdk-17-slim AS build
-WORKDIR /app
-COPY pom.xml ./
-COPY src ./src
-RUN mvn clean package -DskipTests
+# Use Maven image with JDK pre-installed
+FROM maven:3.9.5-eclipse-temurin-17
 
-# Package stage
-FROM openjdk:17-jdk-slim
+# Set the working directory
 WORKDIR /app
-COPY --from=build /app/target/backend-0.0.1-SNAPSHOT.jar app.jar
+
+# Copy the Maven project files
+COPY . .
+
+# Expose the application port
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]
+
+# Default command to run the Spring Boot application
+CMD ["mvn", "spring-boot:run"]

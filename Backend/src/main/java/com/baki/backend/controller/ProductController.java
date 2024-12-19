@@ -33,7 +33,7 @@ public class ProductController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Product> updateProduct(
-            @PathVariable int id, @RequestPart Product product, @RequestPart("file") MultipartFile file) {
+            @PathVariable int id, @RequestPart Product product, @RequestPart(value = "file", required = false) MultipartFile file) {
         return ResponseEntity.ok(productService.updateProduct(id, product, file));
     }
 

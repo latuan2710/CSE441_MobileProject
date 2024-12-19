@@ -31,8 +31,9 @@ public class BrandController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Brand> updateBrand(@PathVariable int id, @RequestBody Brand brand) {
-        return ResponseEntity.ok(brandService.updateBrand(id, brand));
+    public ResponseEntity<Brand> updateBrand(
+            @PathVariable int id, @RequestBody Brand brand, @RequestPart(required = false) MultipartFile file) {
+        return ResponseEntity.ok(brandService.updateBrand(id, brand,file));
     }
 
     @DeleteMapping("/{id}")

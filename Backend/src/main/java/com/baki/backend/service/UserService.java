@@ -103,6 +103,8 @@ public class UserService {
             user.setAvatar(cloudinaryService.uploadFile(file, "avatar"));
         }
 
+        user.setStatus(userDTO.getStatus());
+
         return userRepository.save(user);
     }
 

@@ -46,7 +46,8 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable int id, @RequestPart UserDTO userDTO, @RequestPart("file") MultipartFile file) {
+    public ResponseEntity<User> updateUser(
+            @PathVariable int id, @RequestPart UserDTO userDTO, @RequestPart(value = "file", required = false) MultipartFile file) {
         User updatedUser = userService.updateUser(id, userDTO, file);
         return ResponseEntity.ok(updatedUser);
     }

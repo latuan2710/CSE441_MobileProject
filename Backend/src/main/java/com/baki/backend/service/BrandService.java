@@ -29,10 +29,15 @@ public class BrandService {
         return brandRepository.save(brand);
     }
 
-    public Brand updateBrand(int id, Brand brand) {
+    public Brand updateBrand(int id, Brand brand, MultipartFile file) {
         Brand existingBrand = getBrandById(id);
         existingBrand.setName(brand.getName());
         existingBrand.setLogo(brand.getLogo());
+
+        if (file != null) {
+            existingBrand.setLogo(cloudinaryService.uploadFile(file, "Logo"));
+        }
+
         return brandRepository.save(existingBrand);
     }
 

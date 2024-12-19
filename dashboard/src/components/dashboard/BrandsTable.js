@@ -3,7 +3,8 @@ import { Button, Card, CardBody, CardTitle, Table } from "reactstrap";
 import Notification from "../../Alert/Notification";
 import "../../Style/style.css";
 import BrandModal from "../modal/BrandModal";
-import { getAllBrands } from "../../Controller/apiServices";
+import { deleteBrandById, getAllBrands } from "../../Controller/apiServices";
+import DeleteConfirmModal from "../modal/DeleteConfirmModal";
 
 const BrandsTable = () =>
 {
@@ -13,6 +14,10 @@ const BrandsTable = () =>
   const [ modalId, setModalId ] = useState( null );
   const [ refresh, setRefresh ] = useState( 0 );
   const account = JSON.parse( sessionStorage.getItem( "account" ) );
+
+  const [ deleteModal, setDeleteModal ] = useState( false );
+  const [ selectedId, setSelectedId ] = useState( null );
+
 
   const [ currentPage, setCurrentPage ] = useState( 1 );
   const itemsPerPage = 6;
@@ -53,6 +58,37 @@ const BrandsTable = () =>
     setModalId( id );
   };
 
+  const openDeleteModal = ( id ) =>
+  {
+    setSelectedId( id ); // Set the ID of the item to be deleted
+    setDeleteModal( true ); // Open the modal
+  };
+  const handleDelete = async () =>
+  {
+    try
+    {
+      const response = await deleteBrandById( selectedId );
+      if ( response.status === 200 || response.status === 204 )
+      {
+        setSuccessMessage( "Brand deleted successfully!" );
+        setTimeout( () =>
+        {
+          setSuccessMessage( "" );
+        }, 2000 );
+        setModal( false );
+        setRefresh( ( pre ) => pre + 1 );
+      } else
+      {
+        console.error( "Unexpected response status:", response.status );
+        alert( "Failed to delete the brand. Please try again." );
+      }
+    } catch ( error )
+    {
+      console.error( "Error deleting brand:", error.message );
+      alert( "An error occurred while deleting the brand. Please try again." );
+    }
+  };
+
   return (
     <div>
       {/* Show success message */ }
@@ -70,15 +106,12 @@ const BrandsTable = () =>
               <tr>
                 <th>Image</th>
                 <th>Name</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
               { displayed.map( ( tdata, index ) => (
-                <tr
-                  key={ index }
-                  className="border-top clickable-row"
-                  onClick={ () => openModal( tdata.id ) }
-                >
+                <tr key={ index } className="clickable-row border-top" onClick={ () => openModal( tdata.id ) }>
                   <td>
                     <div className="d-flex align-items-center p-2">
                       <img
@@ -90,7 +123,33 @@ const BrandsTable = () =>
                       />
                     </div>
                   </td>
-                  <td>{ tdata.name }</td>
+                  <td>
+                    { tdata.name }
+                  </td>
+                  <td>
+                    <Button
+                      color="danger"
+                      onClick={ ( e ) =>
+                      {
+                        e.stopPropagation(); // Prevents the row click from being triggered
+                        openDeleteModal( tdata.id );
+                      } }
+                    >
+                      Delete
+                    </Button>
+                    { deleteModal && (
+                      <DeleteConfirmModal
+                        message={ "Are you sure?" }
+                        modal={ deleteModal }
+                        setModal={ setDeleteModal }
+                        deleteFunction={ () =>
+                        {
+                          handleDelete( selectedId );
+                          setDeleteModal( false );
+                        } }
+                      />
+                    ) }
+                  </td>
                 </tr>
               ) ) }
             </tbody>

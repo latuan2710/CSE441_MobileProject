@@ -16,6 +16,7 @@ export const getLogin = async ( username, password ) =>
   }
 };
 
+//product
 export const getAllProducts = async () =>
 {
   try
@@ -83,6 +84,20 @@ export const updateProduct = async ( id, product, image ) =>
   }
 };
 
+export const deleteProductById = async ( id ) =>
+{
+  try
+  {
+    const response = await axios.delete( `/api/service/products/${ id }` );
+    return response;
+  } catch ( error )
+  {
+    console.error( "Error fetching Subcategorie by ID:", error.message );
+    throw error;
+  }
+}
+
+//brand
 export const getAllBrands = async () =>
 {
   try
@@ -162,6 +177,20 @@ export const addBrand = async ( { name, logo } ) =>
   }
 };
 
+export const deleteBrandById = async ( id ) =>
+{
+  try
+  {
+    const response = await axios.delete( `/api/service/brands/${ id }` );
+    return response;
+  } catch ( error )
+  {
+    console.error( "Error fetching Subcategorie by ID:", error.message );
+    throw error;
+  }
+}
+
+//category
 export const getAllCategories = async () =>
 {
   try
@@ -232,6 +261,19 @@ export const updateCategory = async ( id, name ) =>
   }
 };
 
+export const deleteCategoryById = async ( id ) =>
+{
+  try
+  {
+    const response = await axios.delete( `/api/service/categories/${ id }` );
+    return response;
+  } catch ( error )
+  {
+    console.error( "Error fetching Subcategorie by ID:", error.message );
+    throw error;
+  }
+}
+
 //Subcategory
 export const getAllSubcategories = async () =>
 {
@@ -292,7 +334,20 @@ export const updateSubcategory = async ( id, name, categoryId ) =>
   }
 };
 
+export const deleteSubcategoryById = async ( id ) =>
+{
+  try
+  {
+    const response = await axios.delete( `/api/service/subcategories/${ id }` );
+    return response;
+  } catch ( error )
+  {
+    console.error( "Error fetching Subcategorie by ID:", error.message );
+    throw error;
+  }
+}
 
+//staff
 export const getAllStaffs = async () =>
 {
   try
@@ -386,18 +441,19 @@ export const getOrderById = async ( id ) =>
   }
 };
 
-// export const changeOrderStatus = async ( id, status ) =>
-// {
-//   try
-//   {
-//     const response = await axios.get( `/api/service/orders/${ id }` );
-//     return response.data;
-//   } catch ( error )
-//   {
-//     console.error( "Error fetching order by ID:", error.message );
-//     throw error;
-//   }
-// };
+export const changeOrderStatus = async ( id, status ) =>
+{
+  try
+  {
+    const response = await axios.put( `/api/service/orders/${ id }/${ status }` );
+    return response.data;
+  } catch ( error )
+  {
+    console.error( "Error updating order status:", error.message );
+    throw error;
+  }
+};
+
 
 
 //users

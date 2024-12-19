@@ -19,7 +19,6 @@ public class Order {
     private int id;
 
     @ManyToOne
-    @JsonIgnore
     @JoinColumn(nullable = false, name = "user_id")
     private User user;
 

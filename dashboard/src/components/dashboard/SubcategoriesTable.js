@@ -3,7 +3,8 @@ import { Button, Card, CardBody, CardTitle, Table } from "reactstrap";
 import Notification from "../../Alert/Notification";
 import SubcategoryModal from "../modal/SubcategoryModal";
 import "../../Style/style.css";
-import { getAllSubcategories } from "../../Controller/apiServices";
+import { deleteSubcategoryById, getAllSubcategories } from "../../Controller/apiServices";
+import DeleteConfirmModal from "../modal/DeleteConfirmModal";
 
 const SubcategoriesTable = () =>
 {
@@ -13,6 +14,9 @@ const SubcategoriesTable = () =>
   const [ modalId, setModalId ] = useState( null );
   const [ refresh, setRefresh ] = useState( 0 );
   const account = JSON.parse( sessionStorage.getItem( "account" ) );
+
+  const [ deleteModal, setDeleteModal ] = useState( false );
+  const [ selectedId, setSelectedId ] = useState( null );
 
   const [ currentPage, setCurrentPage ] = useState( 1 );
   const itemsPerPage = 6;
@@ -54,11 +58,38 @@ const SubcategoriesTable = () =>
       setCurrentPage( pageNumber );
     }
   };
-  const handleDelete = ( id ) =>
-  {
-    console.log( id );
 
-  }
+  const handleDelete = async () =>
+  {
+    try
+    {
+      const response = await deleteSubcategoryById( selectedId );
+      if ( response.status === 200 || response.status === 204 )
+      {
+        setSuccessMessage( "Category deleted successfully!" );
+        setTimeout( () =>
+        {
+          setSuccessMessage( "" );
+        }, 2000 );
+        setModal( false );
+        setRefresh( ( pre ) => pre + 1 );
+      } else
+      {
+        console.error( "Unexpected response status:", response.status );
+        alert( "Failed to delete the category. Please try again." );
+      }
+    } catch ( error )
+    {
+      console.error( "Error deleting category:", error.message );
+      alert( "An error occurred while deleting the category. Please try again." );
+    }
+  };
+
+  const openDeleteModal = ( id ) =>
+  {
+    setSelectedId( id ); // Set the ID of the item to be deleted
+    setDeleteModal( true ); // Open the modal
+  };
   return (
     <div>
       {/* Show success message */ }
@@ -79,12 +110,33 @@ const SubcategoriesTable = () =>
             </thead>
             <tbody>
               { displayed.map( ( tdata, index ) => (
-                <tr
-                  key={ index }
-                  className="border-top clickable-row"
-                  onClick={ () => openModal( tdata.id ) }
-                >
-                  <td >{ tdata.name }</td>
+                <tr key={ index } className="border-top">
+                  <td
+                    className="clickable-row"
+                    onClick={ () => openModal( tdata.id ) }
+                  >
+                    { tdata.name }
+                  </td>
+                  <td>
+                    <Button
+                      color="danger"
+                      onClick={ () => openDeleteModal( tdata.id ) }
+                    >
+                      Delete
+                    </Button>
+                    { deleteModal && (
+                      <DeleteConfirmModal
+                        message={ "Are you sure?" }
+                        modal={ deleteModal }
+                        setModal={ setDeleteModal }
+                        deleteFunction={ () =>
+                        {
+                          handleDelete( selectedId );
+                          setDeleteModal( false );
+                        } }
+                      />
+                    ) }
+                  </td>
                 </tr>
               ) ) }
             </tbody>

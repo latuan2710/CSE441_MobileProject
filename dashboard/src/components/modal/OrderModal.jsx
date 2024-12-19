@@ -1,113 +1,97 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import
 {
   Button,
-  Form,
-  FormGroup,
-  Input,
-  Label,
   Modal,
   ModalBody,
   ModalFooter,
   ModalHeader,
+  Table
 } from "reactstrap";
-import
-{
-  addUser,
-  getUserById,
-  updateUser,
-} from "../../Controller/apiServices";
+import { getOrderById } from "../../Controller/apiServices";
+import "../../Style/style.css";
 
 export default function OrderModal ( {
   modal,
   setModal,
   id,
   setSuccessMessage,
-  setRefresh,
+  setRefresh
 } )
 {
-  const [ username, setUsername ] = useState( "" );
-  const [ email, setEmail ] = useState( "" );
-  const [ password, setPassword ] = useState( "" );
-  const [ phone, setPhone ] = useState( "" );
-  const [ address, setAddress ] = useState( "" );
-  const [ avatar, setAvatar ] = useState( null );
-  const [ preview, setPreview ] = useState( "" );
-  const [ status, setStatus ] = useState( "" );
+  const [ orderDetails, setOrderDetails ] = useState( [] );
+  const [ receiverInfo, setReceiverInfo ] = useState( {} );
 
-  const avatarRef = useRef();
-
-  // Fetch user data if updating
   useEffect( () =>
   {
-    const fetchUser = async () =>
+    const fetchOrderDetails = async () =>
     {
       if ( id !== null )
       {
         try
         {
-          const data = await getUserById( id );
-          setUsername( data.username );
-          setEmail( data.email );
-          setPhone( data.phone );
-          setAddress( data.address );
-          setPreview( data.avatar );
-          setStatus( data.status );
+          const order = await getOrderById( id );
+          setOrderDetails( order.orderDetails );
+          setReceiverInfo( {
+            name: order.receiverName,
+            address: order.receiverAddress,
+            phone: order.receiverPhone,
+          } );
         } catch ( error )
         {
-          console.error( "Error fetching user:", error.message );
+          console.error( "Error fetching order details:", error.message );
         }
       }
     };
-    fetchUser();
+    fetchOrderDetails();
   }, [ id ] );
-
-  const handleFileChange = ( e ) =>
-  {
-    const file = e.target.files[ 0 ];
-    if ( file )
-    {
-      setAvatar( file );
-      setPreview( URL.createObjectURL( file ) );
-    } else
-    {
-      setAvatar( null );
-      setPreview( "" );
-    }
-  };
-
-  const handleSubmit = async ( e ) =>
-  {
-    e.preventDefault();
-    try
-    {
-      if ( id )
-      {
-        await updateUser( id, { id, phone, address, status }, avatar );
-        setSuccessMessage( "User updated successfully!" );
-      } else
-      {
-        await addUser( { username, email, password, phone, address }, avatar );
-        setSuccessMessage( "User added successfully!" );
-      }
-      setTimeout( () => setSuccessMessage( "" ), 2000 );
-      setModal( false );
-      setRefresh( ( prev ) => prev + 1 );
-    } catch ( error )
-    {
-      console.error( `Error ${ id ? "updating" : "adding" } user:`, error.message );
-      alert( `An error occurred while ${ id ? "updating" : "adding" } the user.` );
-    }
-  };
 
   return (
     <Modal isOpen={ modal } toggle={ () => setModal( false ) } size="lg">
-      <ModalHeader toggle={ () => setModal( false ) }>
-        Order detail
+      <ModalHeader toggle={ () => setModal( false ) } className="modal-header-custom">
+        Order Details
       </ModalHeader>
-      <ModalBody>
-
+      <ModalBody className="modal-body-custom">
+        {/* Order Details Table */ }
+        <Table responsive striped bordered className="order-details-table">
+          <thead className="table-header-custom">
+            <tr>
+              <th>Product Image</th>
+              <th>Product Name</th>
+              <th>Brand</th>
+              <th>Category</th>
+              <th>Price</th>
+              <th>Quantity</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            { orderDetails.map( ( detail, index ) => (
+              <tr key={ index }>
+                <td>
+                  <img
+                    src={ detail.product.image }
+                    alt={ detail.product.name }
+                    className="product-image"
+                    style={ { maxWidth: '100px' } }
+                  />
+                </td>
+                <td>{ detail.product.name }</td>
+                <td>{ detail.product.brand.name }</td>
+                <td>{ detail.product.subcategory.category.name }</td>
+                <td>${ detail.product.price.toFixed( 2 ) }</td>
+                <td>{ detail.quantity }</td>
+                <td>${ ( detail.quantity * detail.product.price ).toFixed( 2 ) }</td>
+              </tr>
+            ) ) }
+          </tbody>
+        </Table>
       </ModalBody>
+      <ModalFooter className="modal-footer-custom">
+        <Button color="secondary" onClick={ () => setModal( false ) }>
+          Close
+        </Button>
+      </ModalFooter>
     </Modal>
   );
 }

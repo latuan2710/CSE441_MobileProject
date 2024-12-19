@@ -1,22 +1,23 @@
 import { useEffect, useRef, useState } from "react";
 import
-  {
-    Button,
-    Form,
-    FormGroup,
-    Input,
-    Label,
-    Modal,
-    ModalBody,
-    ModalFooter,
-    ModalHeader,
-  } from "reactstrap";
+{
+  Button,
+  Form,
+  FormGroup,
+  Input,
+  Label,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
+} from "reactstrap";
 import
-  {
-    addBrand,
-    getBrandById,
-    updateBrand,
-  } from "../../Controller/apiServices";
+{
+  addBrand,
+  deleteBrandById,
+  getBrandById,
+  updateBrand,
+} from "../../Controller/apiServices";
 
 export default function BrandModal ( {
   modal,
@@ -84,13 +85,31 @@ export default function BrandModal ( {
     }
   };
 
-  // const handleAddOrUpdate = async (id) => {
-  //   if (id) {
-  //     await updateBrand();
-  //   } else {
-  //     await addBrand();
-  //   }
-  // };
+  const handleDelete = async () =>
+  {
+    try
+    {
+      const response = await deleteBrandById( id );
+      if ( response.status === 200 || response.status === 204 )
+      {
+        setSuccessMessage( "Brand deleted successfully!" );
+        setTimeout( () =>
+        {
+          setSuccessMessage( "" );
+        }, 2000 );
+        setModal( false );
+        setRefresh( ( pre ) => pre + 1 );
+      } else
+      {
+        console.error( "Unexpected response status:", response.status );
+        alert( "Failed to delete the brand. Please try again." );
+      }
+    } catch ( error )
+    {
+      console.error( "Error deleting brand:", error.message );
+      alert( "An error occurred while deleting the brand. Please try again." );
+    }
+  };
 
   const handleFileChange = ( e ) =>
   {

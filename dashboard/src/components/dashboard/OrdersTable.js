@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button, Card, CardBody, CardTitle, Table } from "reactstrap";
 import Notification from "../../Alert/Notification";
-import { getAllOrders } from "../../Controller/apiServices";
+import { getAllOrders, changeOrderStatus } from "../../Controller/apiServices";
 import OrderModal from "../modal/OrderModal";
 
 import "../../Style/style.css";
@@ -61,10 +61,19 @@ const OrdersTable = () =>
   };
 
 
-  const handleStatusChange = () =>
+  const handleStatusChange = async ( id, status ) =>
   {
-    console.log( "hehe" );
-  }
+    try
+    {
+      await changeOrderStatus( id, status ); // Wait for the API call to complete
+      setSuccessMessage( `Order status updated to ${ status }` );
+      setRefresh( ( prev ) => prev + 1 ); // Trigger a re-fetch of the data
+    } catch ( error )
+    {
+      console.error( "Error updating order status:", error );
+    }
+  };
+
   return (
     <div>
       {/* Show success message */ }
@@ -93,45 +102,43 @@ const OrdersTable = () =>
                   className="border-top clickable-row"
                   onClick={ () => openModal( tdata.id ) }
                 >
-                  <td>{ tdata.username }</td>
-                  <td>{ tdata.receivername }</td>
-                  <td>{ tdata.receiveraddress }</td>
+                  <td>{ tdata.user.username }</td>
+                  <td>{ tdata.receiverName }</td>
+                  <td>{ tdata.receiverAddress }</td>
                   <td>{ tdata.receiverPhone }</td>
-                  <td>{ tdata.totalprice }</td>
+                  <td>${ tdata.totalPrice }</td>
                   <td style={ { fontWeight: "900" } }>{ tdata.status }</td>
                   <td>
-                    <Button
-                      color="warning"
-                      size="sm"
-                      className="me-1"
-                      onClick={ () => handleStatusChange( tdata.id, "PENDING" ) }
+                    <div
+                      onClick={ ( e ) => e.stopPropagation() } // Prevent triggering row click
                     >
-                      PENDING
-                    </Button>
-                    <Button
-                      color="info"
-                      size="sm"
-                      className="me-1"
-                      onClick={ () => handleStatusChange( tdata.id, "SHIPPING" ) }
-                    >
-                      SHIPPING
-                    </Button>
-                    <Button
-                      color="success"
-                      size="sm"
-                      className="me-1"
-                      onClick={ () => handleStatusChange( tdata.id, "COMPLETED" ) }
-                    >
-                      COMPLETED
-                    </Button>
-                    <Button
-                      color="danger"
-                      size="sm"
-                      onClick={ () => handleStatusChange( tdata.id, "CANCELLED" ) }
-                    >
-                      CANCELLED
-                    </Button>
+                      { [ "PENDING", "SHIPPING", "COMPLETED", "CANCELLED" ].map( ( status ) => (
+                        <Button
+                          key={ status }
+                          color={
+                            status === "PENDING"
+                              ? "warning"
+                              : status === "SHIPPING"
+                                ? "info"
+                                : status === "COMPLETED"
+                                  ? "success"
+                                  : "danger"
+                          }
+                          size="sm"
+                          className="me-1"
+                          onClick={ ( e ) =>
+                          {
+                            e.stopPropagation(); // Prevent row click
+                            handleStatusChange( tdata.id, status );
+                          } }
+                          hidden={ tdata.status === status } // Disable button if status matches current
+                        >
+                          { status }
+                        </Button>
+                      ) ) }
+                    </div>
                   </td>
+
                 </tr>
               ) ) }
             </tbody>

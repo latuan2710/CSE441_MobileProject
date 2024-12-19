@@ -27,9 +27,7 @@ public class OrderService {
     }
 
     public List<Order> getOrdersByUserIdAndStatus(int userId, EOrderStatus status) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found!"));
-        return orderRepository.findByUserAndStatus(user, status, Sort.by(Sort.Direction.DESC, "createAt"));
+        return orderRepository.getOrdersByUserIdAndStatus(userId, status);
     }
 
     public Order getOrderById(int orderId) {
@@ -37,24 +35,32 @@ public class OrderService {
                 .orElseThrow(() -> new RuntimeException("Order not found!"));
     }
 
+    public List<OrderDetail> getOrderDetailByOrderId(int orderId) {
+        return orderDetailRepository.getOrderDetailByOrderId(orderId);
+    }
+
     public List<Order> getOrdersByUserId(int userId) {
         return orderRepository.findByUserId(userId);
     }
 
-    public void changeOrderStatus(int orderId, EOrderStatus status) {
+    public Order changeOrderStatus(int orderId, EOrderStatus status) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found!"));
 
         order.setStatus(status);
-        orderRepository.save(order);
+        return orderRepository.save(order);
     }
 
-    public Order checkoutOrder(OrderDTO orderDTO, int userId) {
+    public void checkoutOrder(OrderDTO orderDTO, int userId) throws RuntimeException {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found!"));
 
         Cart cart = cartRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("Cart not found!"));
+
+        if (cart.getCartDetails().isEmpty()) {
+            throw new RuntimeException("There is no item in cart!");
+        }
 
         double totalPrice = cart.getCartDetails().stream()
                 .mapToDouble(cartDetail -> cartDetail.getQuantity() * cartDetail.getProduct().getPrice())
@@ -85,7 +91,13 @@ public class OrderService {
 
         cart.getCartDetails().clear();
         cartRepository.save(cart);
+    }
 
-        return order;
+    public Order cancelOrder(int orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found!"));
+
+        order.setStatus(EOrderStatus.CANCELLED);
+        return orderRepository.save(order);
     }
 }

@@ -3,7 +3,9 @@ package com.baki.backend.security;
 
 import com.baki.backend.model.ERole;
 import com.baki.backend.model.Staff;
+import com.baki.backend.model.User;
 import com.baki.backend.service.StaffService;
+import com.baki.backend.service.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,6 +26,8 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
     private StaffService staffService;
+    @Autowired
+    private UserService userService;
     private static final Logger logger = LoggerFactory.getLogger(CustomAuthenticationFilter.class);
 
     @Override
@@ -37,6 +41,14 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
             String type = (String) session.getAttribute("type");
 
             if (type == null || type.equals("user")) {
+                User user = userService.getUserById(userId);
+
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                        user.getUsername(),
+                        null,
+                        Collections.emptyList());
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+
                 filterChain.doFilter(request, response);
                 return;
             }

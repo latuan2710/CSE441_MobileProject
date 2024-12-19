@@ -9,5 +9,4 @@ public class ProductDTO {
     private int subcategoryId;
     private double price;
     private int stockQuantity;
-    private String image;
 }

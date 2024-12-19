@@ -33,7 +33,10 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/api/users/profile",
                                 "/api/users/upload",
-                                "/api/service/carts/**").authenticated()
+                                "/api/service/carts/**",
+                                "/api/service/orders/user/**",
+                                "/api/service/orders/checkout",
+                                "/api/service/orders/detail/{orderId}").authenticated()
 
                         .requestMatchers(HttpMethod.GET,
                                 "/api/service/products",
@@ -50,7 +53,8 @@ public class SecurityConfig {
                                 "/api/service/products/**",
                                 "/api/service/brands/**",
                                 "/api/service/categories/**",
-                                "/api/service/subcategories/**").hasAnyAuthority("ADMIN", "STAFF")
+                                "/api/service/subcategories/**",
+                                "/api/service/orders/**").hasAnyAuthority("ADMIN", "STAFF")
                         .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
                         .anyRequest().authenticated()
                 );

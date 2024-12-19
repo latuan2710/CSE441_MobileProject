@@ -80,13 +80,8 @@ public class CartService {
         return cartRepository.save(cart);
     }
 
-    public Cart removeCartItem(int userId, int cartDetailId) {
-        Cart cart = cartRepository.findByUserId(userId)
-                .orElseThrow(() -> new RuntimeException("Cart not found!"));
-
-        cart.getCartDetails().removeIf(detail -> detail.getId() == cartDetailId);
-
-        return cartRepository.save(cart);
+    public void removeCartItem(int cartDetailId) {
+        cartDetailRepository.deleteById(cartDetailId);
     }
 
     public Cart clearCart(int userId) {

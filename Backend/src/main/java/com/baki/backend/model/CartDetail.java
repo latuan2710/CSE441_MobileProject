@@ -1,5 +1,6 @@
 package com.baki.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -15,6 +16,7 @@ public class CartDetail {
     private int quantity;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(nullable = false, name = "cart_id")
     private Cart cart;
 

@@ -1,56 +1,62 @@
 import CartItem from '@components/CartItem';
-import React, {useState} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import Waiting from '@components/Waiting';
+import {useIsFocused} from '@react-navigation/native';
+import {deleteCartItem, getCart} from '@services/cartService';
+import React, {useCallback, useEffect, useState} from 'react';
+import {
+  RefreshControl,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {Appbar, Button} from 'react-native-paper';
 import {SwipeListView} from 'react-native-swipe-list-view';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default function Cart({navigation}) {
-  const [cartItems, setCartItems] = useState([
-    {
-      id: '1',
-      title: 'Brown Jacket',
-      size: 'XL',
-      price: 83.97,
-      quantity: 1,
-      imageUrl:
-        'https://media3.coolmate.me/cdn-cgi/image/quality=80,format=auto/uploads/January2024/pack3loUntitled-2_copy_86.jpg',
-    },
-    {
-      id: '2',
-      title: 'Brown Suite',
-      size: 'XL',
-      price: 120.0,
-      quantity: 1,
-      imageUrl:
-        'https://media3.coolmate.me/cdn-cgi/image/quality=80,format=auto/uploads/January2024/pack3loUntitled-2_copy_86.jpg',
-    },
-    {
-      id: '3',
-      title: 'Brown Jacket',
-      size: 'L',
-      price: 79.99,
-      quantity: 1,
-      imageUrl:
-        'https://media3.coolmate.me/cdn-cgi/image/quality=80,format=auto/uploads/January2024/pack3loUntitled-2_copy_86.jpg',
-    },
-    {
-      id: '4',
-      title: 'Brown Suite',
-      size: 'M',
-      price: 110.5,
-      quantity: 1,
-      imageUrl:
-        'https://media3.coolmate.me/cdn-cgi/image/quality=80,format=auto/uploads/January2024/pack3loUntitled-2_copy_86.jpg',
-    },
-  ]);
+  const [cartItems, setCartItems] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [selectedId, setSelectedId] = useState(0);
+  const isFocus = useIsFocused();
 
-  const handleDelete = id => {
-    setCartItems(prev => prev.filter(item => item.id !== id));
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 1000);
+  }, []);
+
+  const loadCart = async () => {
+    try {
+      let data = await getCart();
+      setCartItems(data.cartDetails);
+    } catch (error) {
+      navigation.navigate('Login');
+    }
   };
 
+  useEffect(() => {
+    loadCart();
+  }, [refreshing]);
+
+  useEffect(() => {
+    setLoading(true);
+    loadCart().then(() => setLoading(false));
+  }, [isFocus]);
+
+  const handleDelete = useCallback(async id => {
+    try {
+      await deleteCartItem(id);
+      setLoading(true);
+      await loadCart();
+      setLoading(false);
+    } catch (error) {}
+  }, []);
+
   let total = cartItems.reduce(
-    (sum, item) => sum + item.price * item.quantity,
+    (sum, item) => sum + item.product.price * item.quantity,
     0,
   );
 
@@ -70,17 +76,29 @@ export default function Cart({navigation}) {
         <Appbar.Content title="My Cart" titleStyle={styles.title} />
       </Appbar.Header>
       <View style={styles.container}>
-        <SwipeListView
-          showsVerticalScrollIndicator={false}
-          data={cartItems}
-          renderItem={({item}) => (
-            <CartItem item={item} setCartItems={setCartItems} />
-          )}
-          renderHiddenItem={renderHiddenItem}
-          rightOpenValue={-75}
-          keyExtractor={item => item.id}
-          disableRightSwipe
-        />
+        {loading ? (
+          <Waiting />
+        ) : (
+          <SwipeListView
+            scrollEnabled={false}
+            showsVerticalScrollIndicator={false}
+            renderHiddenItem={renderHiddenItem}
+            data={cartItems}
+            rightOpenValue={-75}
+            keyExtractor={item => item.id}
+            disableRightSwipe
+            renderItem={({item}) => (
+              <CartItem
+                setRefreshing={setRefreshing}
+                item={item}
+                setCartItems={setCartItems}
+              />
+            )}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+          />
+        )}
         <View style={styles.checkoutContainer}>
           <View style={styles.summary}>
             <Text style={styles.totalText}>Total Cost</Text>

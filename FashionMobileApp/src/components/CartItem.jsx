@@ -1,35 +1,34 @@
+import {changeQuantityCartItem} from '@services/cartService';
 import React from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-export default function CartItem({item, setCartItems}) {
-  const handleQuantityChange = (id, change) => {
-    setCartItems(prev =>
-      prev.map(item =>
-        item.id === id
-          ? {...item, quantity: Math.max(1, item.quantity + change)}
-          : item,
-      ),
-    );
+export default function CartItem({item, setRefreshing}) {
+  const handleQuantityChange = async change => {
+    await changeQuantityCartItem(item.product.id, item.quantity + change);
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 1000);
   };
 
   return (
     <View style={styles.itemContainer}>
-      <Image source={{uri: item.imageUrl}} style={styles.itemImage} />
+      <Image source={{uri: item.product.image}} style={styles.itemImage} />
       <View style={styles.itemDetails}>
-        <Text style={styles.itemTitle}>{item.title}</Text>
-        <Text style={styles.itemSize}>Size: {item.size}</Text>
-        <Text style={styles.itemPrice}>${item.price.toFixed(2)}</Text>
+        <Text style={styles.itemTitle}>{item.product.name}</Text>
+        <Text style={styles.itemSize}>Quantity: {item.quantity}</Text>
+        <Text style={styles.itemPrice}>${item.product.price.toFixed(2)}</Text>
       </View>
       <View style={styles.quantityContainer}>
         <TouchableOpacity
-          onPress={() => handleQuantityChange(item.id, -1)}
+          onPress={() => handleQuantityChange(-1)}
           style={styles.quantityButton}>
           <Icon name="minus" size={16} color="#555" />
         </TouchableOpacity>
         <Text style={styles.quantityText}>{item.quantity}</Text>
         <TouchableOpacity
-          onPress={() => handleQuantityChange(item.id, 1)}
+          onPress={() => handleQuantityChange(1)}
           style={styles.quantityButton}>
           <Icon name="plus" size={16} color="#555" />
         </TouchableOpacity>

@@ -1,5 +1,4 @@
 apply plugin: "com.android.application"
-apply plugin: 'com.google.gms.google-services' // <- Add this line
 apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
 

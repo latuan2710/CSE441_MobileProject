@@ -1,8 +1,8 @@
 import MyScrollView from '@components/MyScrollView';
 import ProductCard from '@components/ProductCard';
 import Waiting from '@components/Waiting';
-import {getAllProducts} from '@services/productService';
-import {useEffect, useState} from 'react';
+import {getAllProducts, searchProductsByKey} from '@services/productService';
+import {useCallback, useEffect, useState} from 'react';
 import {Alert, FlatList, View} from 'react-native';
 import {TextInput, useTheme} from 'react-native-paper';
 
@@ -22,6 +22,12 @@ export default function Shop() {
       .catch(err => Alert.alert('Error', err.message));
   }, [refreshing]);
 
+  const handleSearch = useCallback(async () => {
+    console.log(key);
+    let data = await searchProductsByKey(key);
+    setProducts(data);
+  }, [key]);
+
   if (loading) return <Waiting />;
 
   return (
@@ -33,7 +39,7 @@ export default function Shop() {
           onChangeText={setKey}
           placeholder={'Search...'}
           outlineStyle={{borderRadius: 50}}
-          onSubmitEditing={() => console.log('Enter Search')}
+          onSubmitEditing={handleSearch}
           left={<TextInput.Icon icon="magnify" />}
           right={
             key ? (

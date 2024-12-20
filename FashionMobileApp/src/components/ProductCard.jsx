@@ -1,11 +1,10 @@
-import {WishlistContext} from '@context/WishlistContext';
-import {useNavigation} from '@react-navigation/native';
-import {useContext, useEffect, useState} from 'react';
-import {Dimensions, StyleSheet, Text, View} from 'react-native';
-import {Card, IconButton, useTheme} from 'react-native-paper';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { WishlistContext } from '@context/WishlistContext';
+import { useNavigation } from '@react-navigation/native';
+import { useContext, useEffect, useState } from 'react';
+import { Dimensions, StyleSheet, Text } from 'react-native';
+import { Card, IconButton, useTheme } from 'react-native-paper';
 
-export default function ProductCard({id, title, price, rating, imageUrl}) {
+export default function ProductCard({id, title, price, imageUrl}) {
   const theme = useTheme();
   const navigation = useNavigation();
   const [isFavor, setIsFavor] = useState(false);
@@ -14,7 +13,7 @@ export default function ProductCard({id, title, price, rating, imageUrl}) {
   useEffect(() => {
     setIsFavor(isContain(id));
   }, [wishlist, id]);
-  
+
   return (
     <Card
       style={[styles.card, {backgroundColor: theme.colors.background}]}
@@ -25,11 +24,9 @@ export default function ProductCard({id, title, price, rating, imageUrl}) {
         style={styles.image}
       />
       <Card.Content>
-        <Text style={styles.title}>{title}</Text>
-        <View style={styles.ratingContainer}>
-          <Icon name="star" size={16} color="#FFC107" />
-          <Text style={styles.rating}>{rating}</Text>
-        </View>
+        <Text numberOfLines={1} style={styles.title}>
+          {title}
+        </Text>
         <Text style={styles.price}>${price}</Text>
       </Card.Content>
       <IconButton
@@ -56,14 +53,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginVertical: 8,
-  },
-  ratingContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  rating: {
-    marginLeft: 4,
-    fontSize: 14,
   },
   price: {
     fontSize: 16,

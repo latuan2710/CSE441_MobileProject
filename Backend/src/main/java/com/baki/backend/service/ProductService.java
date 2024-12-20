@@ -86,4 +86,8 @@ public class ProductService {
     public List<Product> getProductsByBrandId(int brandId) {
         return productRepository.findByBrandId(brandId); // New method
     }
+
+    public List<Product> search(String key) {
+        return productRepository.searchByKey(key);
+    }
 }

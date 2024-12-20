@@ -39,8 +39,7 @@ public class SecurityConfig {
                                 "/api/service/orders/detail/{orderId}").authenticated()
 
                         .requestMatchers(HttpMethod.GET,
-                                "/api/service/products",
-                                "/api/service/products/{id}",
+                                "/api/service/products/**",
                                 "/api/service/brands",
                                 "/api/service/categories",
                                 "api/service/subcategories").permitAll()

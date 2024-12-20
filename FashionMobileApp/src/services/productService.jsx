@@ -14,3 +14,15 @@ export const getProductById = async id => {
 
   return res.data;
 };
+
+export const getProductByBrandId = async id => {
+  const res = await axios.get(`${host}/brand/${id}`);
+
+  return res.data;
+};
+
+export const searchProductsByKey = async key => {
+  const res = await axios.get(`${host}/search?key=${key}`);
+
+  return res.data;
+};

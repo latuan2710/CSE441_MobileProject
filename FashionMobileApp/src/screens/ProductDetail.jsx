@@ -1,9 +1,10 @@
 import MyScrollView from '@components/MyScrollView';
 import Waiting from '@components/Waiting';
-import { WishlistContext } from '@context/WishlistContext';
+import {WishlistContext} from '@context/WishlistContext';
+import {addToCart} from '@services/cartService';
 import {getProductById} from '@services/productService';
-import {useContext, useEffect, useState} from 'react';
-import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {useCallback, useContext, useEffect, useState} from 'react';
+import {Alert, Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {
   Appbar,
   Button,
@@ -36,7 +37,7 @@ export default function ProductDetail({route, navigation}) {
 
   useEffect(() => {
     setIsFavor(isContain(id));
-  }, [wishlist,id]);
+  }, [wishlist, id]);
 
   useEffect(() => {
     getProductById(id).then(d => {
@@ -48,6 +49,15 @@ export default function ProductDetail({route, navigation}) {
   if (loading) {
     return <Waiting />;
   }
+
+  const handleAddToCart = async (prodcuctId, quantity) => {
+    try {
+      await addToCart(prodcuctId, quantity);
+      Alert.alert('Success', 'Add to cart successfully!');
+    } catch (error) {
+      Alert.alert('Error', 'Add to cart failed!');
+    }
+  };
 
   return (
     <MyScrollView
@@ -81,10 +91,7 @@ export default function ProductDetail({route, navigation}) {
         <Text variant="titleLarge" style={styles.productTitle}>
           {product.name}
         </Text>
-        <View style={styles.ratingContainer}>
-          <MaterialIcons name="star" size={20} color="#FFD700" />
-          <Text style={styles.ratingText}>{product.rating}</Text>
-        </View>
+
         <Text variant="bodyMedium" style={styles.productDescription}>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua.{' '}
@@ -134,7 +141,7 @@ export default function ProductDetail({route, navigation}) {
             mode="contained"
             icon="cart"
             buttonStyle={styles.addToCartButton}
-            onPress={() => console.log('Add to Cart')}>
+            onPress={() => handleAddToCart(id, 1)}>
             <Text variant="titleMedium" style={{color: '#fff'}}>
               Add to Cart
             </Text>
@@ -156,12 +163,7 @@ const styles = StyleSheet.create({
   },
   detailsContainer: {paddingHorizontal: 16, paddingVertical: 8},
   productTitle: {fontWeight: 'bold', marginBottom: 8},
-  ratingContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  ratingText: {marginLeft: 4, color: '#666'},
+
   productDescription: {color: '#666', marginBottom: 8},
   readMore: {fontWeight: 'bold'},
   divider: {marginVertical: 16},

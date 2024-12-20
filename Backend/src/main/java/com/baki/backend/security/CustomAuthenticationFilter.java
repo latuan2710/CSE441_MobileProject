@@ -36,43 +36,45 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
         HttpSession session = request.getSession(false);
         logger.debug("Processing request: {}", request.getRequestURI());
 
-        if (session != null) {
-            Integer userId = (Integer) session.getAttribute("userId");
-            String type = (String) session.getAttribute("type");
-
-            if (type == null || type.equals("user")) {
-                User user = userService.getUserById(userId);
-
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        user.getUsername(),
-                        null,
-                        Collections.emptyList());
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-
-                filterChain.doFilter(request, response);
-                return;
-            }
-
-            logger.debug("Session found - UserId: {}", userId);
-
-            if (userId != null) {
-                Staff staff = staffService.getUserById(userId);
-                ERole role = staff.getRole();
-                String username = staff.getUsername();
-
-                // Ensure role has ROLE_ prefix
-                logger.debug("Setting authentication with role: {}", role);
-
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        username,
-                        null,
-                        Collections.singletonList(new SimpleGrantedAuthority(role.name())));
-
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-                logger.debug("Authentication set in SecurityContext");
-            }
-        } else {
+        if (session == null) {
             logger.debug("No session found");
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        Integer userId = (Integer) session.getAttribute("userId");
+        String type = (String) session.getAttribute("type");
+
+        if (type.equals("user")) {
+            User user = userService.getUserById(userId);
+
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                    user.getUsername(),
+                    null,
+                    Collections.emptyList());
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        logger.debug("Session found - UserId: {}", userId);
+
+        if (userId != null) {
+            Staff staff = staffService.getUserById(userId);
+            ERole role = staff.getRole();
+            String username = staff.getUsername();
+
+            // Ensure role has ROLE_ prefix
+            logger.debug("Setting authentication with role: {}", role);
+
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                    username,
+                    null,
+                    Collections.singletonList(new SimpleGrantedAuthority(role.name())));
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            logger.debug("Authentication set in SecurityContext");
         }
 
         filterChain.doFilter(request, response);

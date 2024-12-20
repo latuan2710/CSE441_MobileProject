@@ -1,28 +1,22 @@
 import React from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
-import {Button} from 'react-native-paper';
+import { Image, StyleSheet, Text, View } from 'react-native';
 
-export default function OrderItem({
-  orderDetail,
-  onPress = null,
-  buttonTitle = null,
-}) {
+export default function OrderItem({orderDetail}) {
   return (
     <View style={styles.itemContainer}>
-      <Image source={{uri: orderDetail.imageUrl}} style={styles.itemImage} />
+      <Image
+        source={{uri: orderDetail.product.image}}
+        style={styles.itemImage}
+      />
       <View style={styles.itemDetails}>
-        <Text style={styles.itemTitle}>{orderDetail.name}</Text>
+        <Text numberOfLines={2} style={styles.itemTitle}>
+          {orderDetail.product.name}
+        </Text>
         <Text style={styles.itemSize}>Quantity: {orderDetail.quantity}</Text>
-        <Text style={styles.itemPrice}>${orderDetail.price.toFixed(2)}</Text>
+        <Text style={styles.itemPrice}>
+          ${orderDetail.product.price.toFixed(2)}
+        </Text>
       </View>
-      {onPress && (
-        <Button
-          mode="contained"
-          onPress={onPress}
-          style={styles.buttonContainer}>
-          {buttonTitle}
-        </Button>
-      )}
     </View>
   );
 }
@@ -31,8 +25,7 @@ const styles = StyleSheet.create({
   itemContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 16,
-    backgroundColor: '#fff',
+    paddingVertical: 10,
     borderBottomWidth: 1,
     borderBottomColor: '#f0f0f0',
   },

@@ -1,54 +1,14 @@
 import MyView from '@components/MyView';
 import OrderItem from '@components/OrderItem';
+import {getCart} from '@services/cartService';
+import {checkout} from '@services/orderService';
 import {getProfile} from '@services/userService';
 import {useEffect, useState} from 'react';
-import {FlatList, StyleSheet, View} from 'react-native';
+import {Alert, FlatList, StyleSheet, View} from 'react-native';
 import {Appbar, Button, Divider, Text, TextInput} from 'react-native-paper';
 
-const orders = [
-  {
-    id: 1,
-    name: 'Brown Jacket',
-    quantity: 10,
-    price: 83.71,
-    imageUrl:
-      'https://media3.coolmate.me/cdn-cgi/image/quality=80,format=auto/uploads/January2024/pack3loUntitled-2_copy_86.jpg',
-  },
-  {
-    id: 2,
-    name: 'Brown Jacket',
-    quantity: 10,
-    price: 83.71,
-    imageUrl:
-      'https://media3.coolmate.me/cdn-cgi/image/quality=80,format=auto/uploads/January2024/pack3loUntitled-2_copy_86.jpg',
-  },
-  {
-    id: 3,
-    name: 'Brown Jacket',
-    quantity: 10,
-    price: 83.71,
-    imageUrl:
-      'https://media3.coolmate.me/cdn-cgi/image/quality=80,format=auto/uploads/January2024/pack3loUntitled-2_copy_86.jpg',
-  },
-  {
-    id: 4,
-    name: 'Brown Jacket',
-    quantity: 10,
-    price: 83.71,
-    imageUrl:
-      'https://media3.coolmate.me/cdn-cgi/image/quality=80,format=auto/uploads/January2024/pack3loUntitled-2_copy_86.jpg',
-  },
-  {
-    id: 5,
-    name: 'Brown Jacket',
-    quantity: 10,
-    price: 83.71,
-    imageUrl:
-      'https://media3.coolmate.me/cdn-cgi/image/quality=80,format=auto/uploads/January2024/pack3loUntitled-2_copy_86.jpg',
-  },
-];
-
 export default function Checkout({navigation}) {
+  const [orders, setOrders] = useState();
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [address, setAddress] = useState('');
@@ -59,7 +19,19 @@ export default function Checkout({navigation}) {
       setName(p.username);
       setPhone(p.phone);
     });
+    getCart().then(data => setOrders(data.cartDetails));
   }, []);
+
+  const handleCheckout = async () => {
+    try {
+      const res = await checkout(name, address, phone);
+
+      Alert.alert(res.status, res.message);
+      navigation.navigate('Tab');
+    } catch (error) {
+      Alert.alert(error.response.data.status, error.response.data.message);
+    }
+  };
 
   return (
     <MyView style={{flex: 1}}>
@@ -88,9 +60,7 @@ export default function Checkout({navigation}) {
         />
       </MyView>
       <View style={styles.footer}>
-        <Button
-          mode="contained"
-          onPress={() => console.log('Continue to Payment')}>
+        <Button mode="contained" onPress={handleCheckout}>
           Continue to Payment
         </Button>
       </View>

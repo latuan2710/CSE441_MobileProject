@@ -43,6 +43,7 @@ public class AuthController {
 
             return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
+            session.invalidate();
             Map<String, Object> errorResponse = new HashMap<>();
             errorResponse.put("status", "error");
             errorResponse.put("message", e.getMessage());
@@ -76,6 +77,7 @@ public class AuthController {
 
             return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
+            session.invalidate();
             Map<String, Object> errorResponse = new HashMap<>();
             errorResponse.put("status", "error");
             errorResponse.put("message", e.getMessage());
@@ -95,7 +97,7 @@ public class AuthController {
         if (userId != null) {
             return ResponseEntity.ok(Map.of("message", "Session is active"));
         } else {
-            return ResponseEntity.ok(Map.of("message", "Session is not active"));
+            return ResponseEntity.badRequest().body(Map.of("message", "Session is not active"));
         }
     }
 } 

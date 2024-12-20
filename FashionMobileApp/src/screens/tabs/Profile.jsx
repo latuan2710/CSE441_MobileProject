@@ -1,9 +1,10 @@
-import MyScrollView from '@components/MyScrollView';
 import MyView from '@components/MyView';
+import Waiting from '@components/Waiting';
 import {logout} from '@services/authService';
-import {getProfile} from '@services/userService';
+import {getProfile, updateAvatar} from '@services/userService';
 import {useEffect, useState} from 'react';
 import {Button, FlatList, StyleSheet, Text, View} from 'react-native';
+import DocumentPicker from 'react-native-document-picker';
 import {Appbar, Avatar, IconButton, List, useTheme} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -12,20 +13,23 @@ const options = [
   {title: 'My Orders', icon: 'shopping-outline', link: 'Order'},
   {title: 'Help Center', icon: 'help-circle-outline', link: 'Help'},
   {title: 'Privacy Policy', icon: 'lock-outline', link: 'Privacy'},
+  {title: 'Logout', icon: 'logout'},
 ];
 
-const needLogin = ['Your profile', 'My Orders'];
+const needLogin = ['Your profile', 'My Orders', 'Logout'];
 
 export default function Profile({navigation}) {
   const theme = useTheme();
-  const [refreshing, setRefreshing] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    getProfile().then(d => {
-      setUser(d);
-    });
-  }, [refreshing]);
+    getProfile()
+      .then(d => {
+        setUser(d);
+      })
+      .finally(() => setLoading(false));
+  }, []);
 
   const handleLogout = async () => {
     const status = await logout();
@@ -34,8 +38,33 @@ export default function Profile({navigation}) {
     }
   };
 
+  const editAvatar = async () => {
+    try {
+      const result = await DocumentPicker.pickSingle({
+        type: [DocumentPicker.types.images],
+      });
+      await updateAvatar(result);
+      setLoading(true);
+      getProfile()
+        .then(d => {
+          setUser(d);
+        })
+        .finally(() => setLoading(false));
+    } catch (error) {
+      if (DocumentPicker.isCancel(error)) {
+        console.log('User canceled the picker');
+      } else {
+        console.error('File selection error:', error);
+      }
+    }
+  };
+
+  if (loading) {
+    return <Waiting />;
+  }
+
   return (
-    <MyScrollView refreshing={refreshing} setRefreshing={setRefreshing}>
+    <MyView>
       <Appbar.Header style={styles.header}>
         <Appbar.Content title="My Profile" titleStyle={styles.title} />
       </Appbar.Header>
@@ -53,10 +82,10 @@ export default function Profile({navigation}) {
               iconColor="#fff"
               size={15}
               style={styles.editIcon}
-              onPress={() => console.log('Edit Profile')}
+              onPress={editAvatar}
             />
           </View>
-          <Text style={styles.name}>Esther Howard</Text>
+          <Text style={styles.name}>{user.username}</Text>
         </View>
       ) : (
         <View
@@ -91,7 +120,9 @@ export default function Profile({navigation}) {
           data={options}
           keyExtractor={item => item.title}
           renderItem={({item}) => {
-            if (!user && needLogin.includes(item.title)) return null;
+            if (!user && needLogin.includes(item.title)) {
+              return null;
+            }
             return (
               <List.Item
                 title={item.title}
@@ -104,30 +135,20 @@ export default function Profile({navigation}) {
                   />
                 )}
                 right={props => <List.Icon {...props} icon="chevron-right" />}
-                onPress={() => navigation.navigate(item.link)}
+                onPress={() => {
+                  if (item.title === 'Logout') {
+                    handleLogout();
+                  } else {
+                    navigation.navigate(item.link);
+                  }
+                }}
                 style={styles.listItem}
               />
             );
           }}
         />
       </MyView>
-      {user && (
-        <List.Item
-          title={'Logout'}
-          left={props => (
-            <Icon
-              {...props}
-              name={'logout'}
-              size={24}
-              color={theme.colors.primary}
-            />
-          )}
-          right={props => <List.Icon {...props} icon="chevron-right" />}
-          onPress={handleLogout}
-          style={styles.listItem}
-        />
-      )}
-    </MyScrollView>
+    </MyView>
   );
 }
 

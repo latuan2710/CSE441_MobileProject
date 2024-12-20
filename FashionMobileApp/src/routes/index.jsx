@@ -5,12 +5,8 @@ import Order from '@screens/Order';
 import Privacy from '@screens/Privacy';
 import ProductDetail from '@screens/ProductDetail';
 import ProfileEdit from '@screens/ProfileEdit';
-import Review from '@screens/Review';
-import ForgotPassword from '@screens/auth/ForgotPassword';
 import Login from '@screens/auth/Login';
 import Register from '@screens/auth/Register';
-import ResetPassword from '@screens/auth/ResetPassword';
-import Verify from '@screens/auth/Verify';
 import Cart from '@screens/tabs/Cart';
 import Home from '@screens/tabs/Home';
 import Profile from '@screens/tabs/Profile';
@@ -26,21 +22,6 @@ export const screens = [
   {
     name: 'Register',
     component: Register,
-    options: {headerShown: false},
-  },
-  {
-    name: 'ForgotPassword',
-    component: ForgotPassword,
-    options: {headerShown: false},
-  },
-  {
-    name: 'Verify',
-    component: Verify,
-    options: {headerShown: false},
-  },
-  {
-    name: 'ResetPassword',
-    component: ResetPassword,
     options: {headerShown: false},
   },
   {
@@ -71,11 +52,6 @@ export const screens = [
   {
     name: 'Order',
     component: Order,
-    options: {headerShown: false},
-  },
-  {
-    name: 'Review',
-    component: Review,
     options: {headerShown: false},
   },
   {

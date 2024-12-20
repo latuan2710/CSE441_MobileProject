@@ -38,3 +38,12 @@ export const logout = async () => {
     return 403;
   }
 };
+
+export const checkSession = async () => {
+  try {
+    const res = await axios.get(`${host}/check-session`);
+    return res.status;
+  } catch (error) {
+    return 403;
+  }
+};

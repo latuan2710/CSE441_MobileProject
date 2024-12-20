@@ -3,7 +3,9 @@ package com.baki.backend.controller;
 import com.baki.backend.dto.ProductDTO;
 import com.baki.backend.model.Product;
 import com.baki.backend.service.ProductService;
+import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,6 +26,11 @@ public class ProductController {
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProduct(@PathVariable int id) {
         return ResponseEntity.ok(productService.getProductById(id));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Product>> searchProducts(@RequestParam String key) {
+        return ResponseEntity.ok(productService.search(key));
     }
 
     @PostMapping

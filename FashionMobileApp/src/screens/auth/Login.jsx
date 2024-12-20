@@ -1,13 +1,12 @@
-import {GoogleSigninButton} from '@react-native-google-signin/google-signin';
-import {Link} from '@react-navigation/native';
-import {login} from '@services/authService';
-import {useState} from 'react';
-import {Alert, StyleSheet, View} from 'react-native';
-import {Button, Divider, Text, TextInput, useTheme} from 'react-native-paper';
+import { Link } from '@react-navigation/native';
+import { login } from '@services/authService';
+import { useState } from 'react';
+import { Alert, StyleSheet, View } from 'react-native';
+import { Button, Text, TextInput, useTheme } from 'react-native-paper';
 
 export default function Login({navigation}) {
   const theme = useTheme();
-  const [account, setAccount] = useState('latuan5');
+  const [account, setAccount] = useState('latuan2710');
   const [password, setPassword] = useState('tuan1234');
   const [showPassword, setShowPassword] = useState(false);
 
@@ -50,11 +49,6 @@ export default function Login({navigation}) {
           }
         />
       </View>
-      <Link
-        screen={'ForgotPassword'}
-        style={[styles.forgotPassword, {color: theme.colors.linkText}]}>
-        Forgot Password?
-      </Link>
       <Button
         mode="contained"
         onPress={handleLogin}
@@ -63,16 +57,6 @@ export default function Login({navigation}) {
           Sign In
         </Text>
       </Button>
-      <View style={styles.dividerContainer}>
-        <Divider style={styles.divider} />
-        <Text style={styles.orText}>Or sign in with</Text>
-        <Divider style={styles.divider} />
-      </View>
-      <GoogleSigninButton
-        size={GoogleSigninButton.Size.Wide}
-        color={GoogleSigninButton.Color.Dark}
-        style={{width: '100%', height: 50, marginBottom: 20}}
-      />
       <View style={styles.signUpContainer}>
         <Text style={styles.signUpText}>
           Don't have an account?{' '}
@@ -108,31 +92,13 @@ const styles = StyleSheet.create({
   input: {
     marginBottom: 16,
   },
-  forgotPassword: {
-    alignSelf: 'flex-end',
-    marginBottom: 20,
-    textDecorationLine: 'underline',
-  },
   signInButton: {
     paddingVertical: 8,
     borderRadius: 5,
   },
-  dividerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 20,
-  },
-  divider: {
-    flex: 1,
-    height: 1,
-    backgroundColor: 'gray',
-  },
-  orText: {
-    marginHorizontal: 8,
-    color: 'gray',
-  },
   signUpContainer: {
     alignItems: 'center',
+    marginTop: 10,
   },
   signUpLink: {
     fontWeight: 'bold',

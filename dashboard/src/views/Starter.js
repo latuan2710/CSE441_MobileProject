@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 const Starter = () =>
 {
   const navigate = useNavigate();
-  const account = JSON.parse( sessionStorage.getItem( "account" ) );
+  const account = JSON.parse( localStorage.getItem( "account" ) );
   useEffect( () =>
   {
     if ( account === null )

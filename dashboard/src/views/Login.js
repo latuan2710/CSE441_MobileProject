@@ -16,7 +16,7 @@ const Login = () =>
     const response = await getLogin( username, password );
     if ( response.status === 200 || response.status === 201 )
     {
-      sessionStorage.setItem( "account", JSON.stringify( response.data ) );
+      localStorage.setItem( "account", JSON.stringify( response.data ) );
       navigate( "/starter" );
       window.location.reload();
     }

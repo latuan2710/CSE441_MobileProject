@@ -11,7 +11,7 @@ const UsersTable = () => {
   const [modal, setModal] = useState(false);
   const [modalId, setModalId] = useState(null);
   const [refresh, setRefresh] = useState(0);
-  const account = JSON.parse(sessionStorage.getItem("account"));
+  const account = JSON.parse(localStorage.getItem("account"));
   // Paging States
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6; // Number of items per page

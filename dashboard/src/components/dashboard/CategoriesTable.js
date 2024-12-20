@@ -13,7 +13,7 @@ const CategoriesTable = () =>
   const [ modal, setModal ] = useState( false );
   const [ modalId, setModalId ] = useState( null );
   const [ refresh, setRefresh ] = useState( 0 );
-  const account = JSON.parse( sessionStorage.getItem( "account" ) );
+  const account = JSON.parse( localStorage.getItem( "account" ) );
 
   const [ deleteModal, setDeleteModal ] = useState( false );
   const [ selectedId, setSelectedId ] = useState( null );

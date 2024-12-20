@@ -13,7 +13,7 @@ const SubcategoriesTable = () =>
   const [ modal, setModal ] = useState( false );
   const [ modalId, setModalId ] = useState( null );
   const [ refresh, setRefresh ] = useState( 0 );
-  const account = JSON.parse( sessionStorage.getItem( "account" ) );
+  const account = JSON.parse( localStorage.getItem( "account" ) );
 
   const [ deleteModal, setDeleteModal ] = useState( false );
   const [ selectedId, setSelectedId ] = useState( null );
@@ -106,6 +106,7 @@ const SubcategoriesTable = () =>
             <thead>
               <tr>
                 <th>Name</th>
+                <th>Category</th>
               </tr>
             </thead>
             <tbody>
@@ -116,6 +117,12 @@ const SubcategoriesTable = () =>
                     onClick={ () => openModal( tdata.id ) }
                   >
                     { tdata.name }
+                  </td>
+                  <td
+                    className="clickable-row"
+                    onClick={ () => openModal( tdata.id ) }
+                  >
+                    { tdata.category.name }
                   </td>
                   <td>
                     <Button

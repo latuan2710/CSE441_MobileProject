@@ -61,7 +61,7 @@ const Sidebar = () =>
   };
   let location = useLocation();
   const navigate = useNavigate();
-  const account = JSON.parse( sessionStorage.getItem( "account" ) );
+  const account = JSON.parse( localStorage.getItem( "account" ) );
 
   useEffect( () =>
   {

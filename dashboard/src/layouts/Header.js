@@ -21,7 +21,7 @@ const Header = () => {
 
   const [dropdownOpen, setDropdownOpen] = React.useState(false);
 
-  const account = JSON.parse(sessionStorage.getItem("account"));
+  const account = JSON.parse(localStorage.getItem("account"));
 
   const toggle = () => setDropdownOpen((prevState) => !prevState);
   const Handletoggle = () => {
@@ -32,7 +32,7 @@ const Header = () => {
   };
 
   const logout = () => {
-    sessionStorage.removeItem("account");
+    localStorage.removeItem("account");
     navigate("/login");
   };
   return (
